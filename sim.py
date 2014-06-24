@@ -4,9 +4,10 @@ import Image
 
 
 im = Image.open('libkoki.png')  
-#im2 = Image.open('floor.png') 
+im2 = Image.open('floor.png') 
 
 tex = materials.texture(data=im, mapping='sign')
+tex2 = materials.texture(data=im2, mapping='sign')
 
 lamp = local_light(pos=(200,300,200), color=color.white)
 
@@ -24,7 +25,7 @@ WIDTH = 400
 HEIGHT = 50
 
 #creates arena
-arenafloor = box(pos=(0,0,0), size=(WIDTH,4,LENGTH), color=color.orange), #material = tex2)
+arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
 areawall1 = box(pos=(-WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
 areawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
 areawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
