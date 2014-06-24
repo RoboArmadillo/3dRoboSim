@@ -1,7 +1,7 @@
 from visual import *
 import math
 import Image
-import thread
+
 
 im = Image.open('libkoki.png')  
 im2 = Image.open('floor.png') 
@@ -10,7 +10,6 @@ tex = materials.texture(data=im, mapping='sign')
 tex2 = materials.texture(data=im2, mapping='sign')
 
 lamp = local_light(pos=(200,300,200), color=color.white)
-
 
 color.brown = (0.38,0.26,0.078)
 color.orange = (0.85,0.54,0.18)
@@ -21,8 +20,8 @@ color.orange = (0.85,0.54,0.18)
 marker_list = []
 player_position = vector(1,2,3)
 
-LENGTH = 400
-WIDTH = 400
+LENGTH = 1000
+WIDTH = 1000
 HEIGHT = 50
 
 #creates arena
@@ -52,6 +51,7 @@ class Marker(object):
 			self.size = 9
 		elif self.marker_type == "token arena":
 			self.size = 40
+		print self.axis
 		self.marker = box(pos=self.pos, size=(0.01,self.size,self.size), color=color.white,material=tex,axis = self.axis)
 
 
@@ -88,49 +88,14 @@ class Token(object):
 		self.code = code
 
 
-
-class Motor(object):
-    def __init__(self, which_motor, speed = 0):
-        self._speed = speed;
-        self._motor_no = which_motor
-        
-
-    @property
-    def speed(self):
-        return self._speed
-        
-
-
-
-    @speed.setter
-    def speed(self, value):
-    	global speed
-        self._speed = value
-
-        
-
-    @speed.deleter
-    def speed(self):
-        del self._speed
-
-
-
-
-
-
-
-
-
-
 class Robot(object):
 	def __init__(self,x,y,z):
 		self.x = x
 		self.y = y
 		self.z = z
-		self.velocity = vector(0,5,0)
+		self.velocity = vector(1,0,2)
 		self.pos = vector(self.x,self.y,self.z)
 		self.box = box(pos=self.pos, size=(30,50,50), color=color.blue)
-		self.motors=[Motor(0),Motor(1),Motor(2)]
 
 
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
@@ -167,36 +132,31 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
 
 	
 
-time.sleep(1)
-populate_walls(5,5)
-R = Robot(0,27,0)
+
+
+
+
+	
+
+
+
+
+
+
 
 for x in xrange(41,50):
 	marker_list.append(Token(x))
 
-def velocity_checker():
-	while True:
-		rate(24)
-		#sitatuation if they are both going dead forwards
-		if R.motors[0].speed == R.motors[1].speed:
-			a = R.motors[0].speed
-			R.velocity = vector(a,0,0)
-			R.box.pos += R.velocity
-
-		#situation if they are going the same speed. but one forwards and backwards
-		elif R.motors[0].speed == -R.motors[1].speed:
-			axis = vector(0,1,0)
-			R.box.rotate(angle=pi/30, axis=axis, origin=R.box.pos)
-
-thread.start_new_thread(velocity_checker,())
-
+time.sleep(1)
+populate_walls(15,15)
+R = Robot(0,27,0)
 while True:
 	rate(24)
-	R.motors[0].speed = -50
-	R.motors[1].speed = 50
-	time.sleep(0.5)
-	R.motors[0].speed = 50
-	R.motors[1].speed = 50
-	time.sleep(0.4)
+	R.box.pos += R.velocity
 
 
+
+#for m in marker_list:
+#	print m.distance
+
+#player = Robot(12)
