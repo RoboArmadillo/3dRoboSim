@@ -73,10 +73,10 @@ class Token(object):
 
 		self.markers = [Marker(code,self.x-5,7,self.z,(-1,0,0),"token marker"),
 						Marker(code,self.x+5,7,self.z,(1,0,0),"token marker"),
-						Marker(code,self.x,7,self.z-5,(0,0,1),"token marker"),
-						Marker(code,self.x,7,self.z+5,(0,0,-1),"token marker"),
-						Marker(code,self.x,2,self.z,(0,1,0),"token marker"),
-						Marker(code,self.x,12,self.z,(0,-1,0),"token marker")]
+						Marker(code,self.x,7,self.z-5,(0,0,-1),"token marker"),
+						Marker(code,self.x,7,self.z+5,(0,0,1),"token marker"),
+						Marker(code,self.x,2,self.z,(0,-1,0),"token marker"),
+						Marker(code,self.x,12,self.z,(0,1,0),"token marker")]
 
 
 
@@ -94,7 +94,7 @@ class Robot(object):
 		self.z = z
 		self.velocity = vector(1,2,0)
 		self.pos = vector(self.x,self.y,self.z)
-		self.box = box(pos=self.pos, size=(5,5,5), color=color.blue)
+		#self.box = box(pos=self.pos, size=(50,50,50), color=color.blue)
 
 
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
@@ -148,7 +148,7 @@ for x in xrange(41,50):
 
 time.sleep(1)
 populate_walls(5,5)
-R = Robot(0,0,0)
+R = Robot(0,27,0)
 while True:
 	rate(24)
 
