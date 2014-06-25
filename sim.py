@@ -131,6 +131,7 @@ class Robot(object):
 		self.pos = vector(self.x,self.y,self.z)
 		self.box = box(pos=self.pos, size=(30,50,50), color=color.blue)
 		self.motors=[Motor(0),Motor(1),Motor(2)]
+		self.heading = vector(0,0,1)
 
 
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
@@ -175,28 +176,31 @@ for x in xrange(41,50):
 	marker_list.append(Token(x))
 
 def velocity_checker():
+
 	while True:
 		rate(24)
 		#sitatuation if they are both going dead forwards
 		if R.motors[0].speed == R.motors[1].speed:
 			a = R.motors[0].speed
-			R.velocity = vector(a,0,0)
+			R.velocity = R.heading*R.motors[0].speed*0.1
 			R.box.pos += R.velocity
 
 		#situation if they are going the same speed. but one forwards and backwards
-		elif R.motors[0].speed == -R.motors[1].speed:
-			axis = vector(0,1,0)
-			R.box.rotate(angle=pi/30, axis=axis, origin=R.box.pos)
+		elif R.motors[0].speed == -R.motors[1].speed: 
+			R.box.rotate(angle=pi/30, axis=vector(0,1,0), origin=R.box.pos)
+			v1 = R.heading
+			R.heading = rotate(v1, angle=pi/30, axis=(0,1,0))
+			print R.heading
 
 thread.start_new_thread(velocity_checker,())
 
 while True:
 	rate(24)
-	R.motors[0].speed = -50
-	R.motors[1].speed = 50
+	R.motors[0].speed = -40
+	R.motors[1].speed = 40
 	time.sleep(0.5)
-	R.motors[0].speed = 50
-	R.motors[1].speed = 50
-	time.sleep(0.4)
-
+	R.motors[0].speed = 30
+	R.motors[1].speed = 30
+	time.sleep(1)
+	
 
