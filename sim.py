@@ -33,6 +33,11 @@ areawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.o
 areawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 
 
+def backward_map(x,in1,in2,out1,out2):
+	a=(in2-in1) #difference between inputs
+	b =(out2-out1) #difference between output
+	scale_factor = float(b)/float(a)
+	return out2 -x*scale_factor
 
 
 #the marker object creates one "Marker" that represents one paper marker that we stick on the side of a "token".
@@ -187,20 +192,28 @@ def velocity_checker():
 
 		#situation if they are going the same speed. but one forwards and backwards
 		elif R.motors[0].speed == -R.motors[1].speed: 
-			R.box.rotate(angle=pi/30, axis=vector(0,1,0), origin=R.box.pos)
+			rot_speed = backward_map(abs(R.motors[0].speed),0,100,pi/20,pi/500)
+			R.box.rotate(angle=rot_speed, axis=vector(0,1,0), origin=R.box.pos)
 			v1 = R.heading
-			R.heading = rotate(v1, angle=pi/30, axis=(0,1,0))
-			print R.heading
+			R.heading = rotate(v1, angle=rot_speed, axis=(0,1,0))
 
 thread.start_new_thread(velocity_checker,())
 
-while True:
+counter =0
+while counter <100:
+	print counter
 	rate(24)
-	R.motors[0].speed = -40
-	R.motors[1].speed = 40
+	R.motors[0].speed = counter
+	R.motors[1].speed = -counter
+	time.sleep(1)
+	counter +=10
+
+
+	'''
 	time.sleep(0.5)
 	R.motors[0].speed = 30
 	R.motors[1].speed = 30
 	time.sleep(1)
+	'''
 	
 
