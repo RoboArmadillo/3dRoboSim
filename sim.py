@@ -173,10 +173,9 @@ for x in xrange(41,50):
 	marker_list.append(Token(x))
 
 def velocity_checker():
-
+	counter = 0
 	while True:
 		rate(24)
-		counter = 0
 		#sitatuation if they are both going dead forwards
 		if R.motors[0].speed == R.motors[1].speed:
 			a = R.motors[0].speed
@@ -197,34 +196,34 @@ def velocity_checker():
 			#then I need to work out the axis on which we are working
 			b = vector(0,1,0) #rotation is about the y axis
 			perp = cross(R.heading,b)
-			print perp
 			 #gives the perpendicular vector
-			if counter <1:
+			centre = R.box.pos - value*multiplier*norm(perp)
+			distance = mag(centre)
 
+			#turning speed slows as centre position is not updated not sure why..
+
+			if 	R.motors[0].speed > R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed>0): #works
+				rot_speed =(-pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
+				print distance
 				centre = R.box.pos - value*multiplier*norm(perp)
-				distance = mag(centre)
 
-				if 	R.motors[0].speed > R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed>0): #works
-					rot_speed =(-pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
-					centre = R.box.pos - value*multiplier*norm(perp)
+			elif R.motors[0].speed > R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed<0): #works
+				rot_speed =(-pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
+				centre = R.box.pos + value*multiplier*norm(perp)
 
-				elif R.motors[0].speed > R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed<0): #works
-					rot_speed =(-pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
-					centre = R.box.pos + value*multiplier*norm(perp)
-
-				elif R.motors[0].speed < R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed<0): 
-					rot_speed =(pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
-					centre = R.box.pos + value*multiplier*norm(perp)
+			elif R.motors[0].speed < R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed<0): 
+				rot_speed =(pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
+				centre = R.box.pos + value*multiplier*norm(perp)
 
 
-				elif R.motors[0].speed < R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed>0):
-					rot_speed =(pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
-					centre = R.box.pos - value*multiplier*norm(perp)
+			elif R.motors[0].speed < R.motors[1].speed and (R.motors[0].speed and R.motors[1].speed>0):
+				rot_speed =(pi/30)/distance*min(R.motors[0].speed,R.motors[1].speed)
+				centre = R.box.pos - value*multiplier*norm(perp)
 
 
 
 
-			#print centre
+			
 			R.heading = rotate(R.heading, angle=rot_speed, axis=(0,1,0))
 			R.box.rotate(angle=rot_speed, axis=vector(0,1,0), origin=centre)
 
@@ -241,8 +240,8 @@ left = R.motors[0]
 right = R.motors[1]
 while True:
 	rate(24)
-	left.speed = 50
-	right.speed = 100
+	left.speed = 100
+	right.speed = 50
 	time.sleep(2)
 	left.speed = 100
 	right.speed = 100
