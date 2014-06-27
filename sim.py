@@ -249,12 +249,10 @@ if __name__ == "__main__":
             if shortest_distance(marker, R, 0.01) < (marker.box.height/2+R.box.height/2):
                 newmarkerpos = marker.box.pos + velocity
                 if newmarkerpos.x > (-WIDTH/2) + 5 and newmarkerpos.x < WIDTH/2 -5 and newmarkerpos.z  < LENGTH/2 -5 and newmarkerpos.z > -LENGTH/2+5:
-                    markers.box.pos += velocity
-                    for things in markers.markers:
-                        things.marker.pos += velocity
                     marker.box.pos += velocity
                     for things in marker.markers:
-                        things.box.pos += velocity
+                        things.marker.pos += velocity
+
 
         
 
