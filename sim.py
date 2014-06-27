@@ -237,12 +237,7 @@ for x in xrange(41,60):
    marker_list.append(Token(x))
 
 def velocity_checker():
-    
-    oldspeed1 = 1.0
-    oldspeed2 = 1.0
     while True:
-        #Goes a bit wonky without the prints, not sure why
-        #print "looping"
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
         velocity = norm(R.box.axis)*averagespeed/RATE
