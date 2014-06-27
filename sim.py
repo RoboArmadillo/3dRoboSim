@@ -242,7 +242,7 @@ def velocity_checker():
     oldspeed2 = 1.0
     while True:
         #Goes a bit wonky without the prints, not sure why
-        print "looping"
+        #print "looping"
         rate(RATE)
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
