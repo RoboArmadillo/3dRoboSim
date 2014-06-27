@@ -243,7 +243,6 @@ def velocity_checker():
     while True:
         #Goes a bit wonky without the prints, not sure why
         #print "looping"
-        rate(RATE)
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
         velocity = norm(R.box.axis)*averagespeed/RATE
@@ -278,7 +277,7 @@ counter =0
 left = R.motors[0]
 right = R.motors[1]
 while True:
-    rate(24)
+    rate(RATE)
 
     left.speed = 100
     right.speed = 70
