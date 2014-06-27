@@ -237,7 +237,13 @@ for x in xrange(41,60):
    marker_list.append(Token(x))
 
 def velocity_checker():
+    
+    oldspeed1 = 1.0
+    oldspeed2 = 1.0
     while True:
+        #Goes a bit wonky without the prints, not sure why
+        #print "looping"
+        rate(RATE)
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
         velocity = norm(R.box.axis)*averagespeed/RATE
@@ -253,12 +259,12 @@ def velocity_checker():
             R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
         else:
             velocity = (0,0,0)
-        for markers in marker_list:
-            if shortest_distance(markers, R, 0.01) < (markers.box.height/2+R.box.height/2):
-                newmarkerpos = markers.box.pos + velocity
+        for marker in marker_list:
+            if shortest_distance(marker, R, 0.01) < (marker.box.height/2+R.box.height/2):
+                newmarkerpos = marker.box.pos + velocity
                 if newmarkerpos.x > (-WIDTH/2) + 5 and newmarkerpos.x < WIDTH/2 -5 and newmarkerpos.z  < LENGTH/2 -5 and newmarkerpos.z > -LENGTH/2+5:
-                    markers.box.pos += velocity
-                    for things in markers.markers:
+                    marker.box.pos += velocity
+                    for things in marker.markers:
                         things.box.pos += velocity
         
             
@@ -272,7 +278,7 @@ counter =0
 left = R.motors[0]
 right = R.motors[1]
 while True:
-    rate(RATE)
+    rate(24)
 
     left.speed = 100
     right.speed = 70
