@@ -245,13 +245,19 @@ if __name__ == "__main__":
             R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
         else:
             velocity = (0,0,0)
-        for markers in marker_list:
-            if shortest_distance(markers, R, 0.01) < (markers.box.height/2+R.box.height/2):
-                newmarkerpos = markers.box.pos + velocity
+        for marker in marker_list:
+            if shortest_distance(marker, R, 0.01) < (marker.box.height/2+R.box.height/2):
+                newmarkerpos = marker.box.pos + velocity
                 if newmarkerpos.x > (-WIDTH/2) + 5 and newmarkerpos.x < WIDTH/2 -5 and newmarkerpos.z  < LENGTH/2 -5 and newmarkerpos.z > -LENGTH/2+5:
+<<<<<<< HEAD
                     markers.box.pos += velocity
                     for things in markers.markers:
                         things.marker.pos += velocity
+=======
+                    marker.box.pos += velocity
+                    for things in marker.markers:
+                        things.box.pos += velocity
+>>>>>>> origin/master
         
 
     
