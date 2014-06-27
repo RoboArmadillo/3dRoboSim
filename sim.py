@@ -58,7 +58,7 @@ class Marker(object):
             self.size = 9
         elif self.marker_type == "token arena":
             self.size = 40
-        self.marker = box(pos=self.pos, size=(0.01,self.size,self.size), color=color.white,material=tex,axis = self.axis)
+        self.box = box(pos=self.pos, size=(0.01,self.size,self.size), color=color.white,material=tex,axis = self.axis)
 
 
 
@@ -141,6 +141,56 @@ class Robot(object):
         return marker_list
 
 
+def shortest_distance(stick1, stick2, div):
+    # To find the top and bottom point of the sticks
+    stick1_top=stick1.box.pos+(stick1.box.axis)/2
+    stick1_bot=stick1.box.pos-(stick1.box.axis)/2
+    stick2_top=stick2.box.pos+(stick2.box.axis)/2
+    stick2_bot=stick2.box.pos-(stick2.box.axis)/2
+    point=stick1_top #Assuming top point of stick1 has the smallest distance from the center of stick2
+    ref_point=stick2_bot #Assigning the bottom point of stick2 as the reference point
+    ref_vec=stick2.box.axis #Assigning the asix of stick2 as the reference vector
+
+    #Assigns the distance between the top point of stick1 and center of stick2 to the variable small
+
+    small =math.hypot(stick1_top.x-stick2.box.pos.x, stick1_top.z-stick2.box.pos.z)
+
+    # The following if statements check if the distance from the selected point of one stick to the center of          #another stick is smaller than the small
+    # If it is smaller, then it changes the value of variable point and variable small
+    # It also changes the reference point to bottom point of stick1 and the reference vector to axis of stick1      #if the smallest distance is from a point in stick2
+
+    if math.hypot(stick1_bot.x-stick2.box.pos.x,stick1_bot.z-stick2.box.pos.z)< small:
+        point=stick1_bot
+        small= math.hypot(stick1_bot.x-stick2.box.pos.x,stick1_bot.z-stick2.box.pos.z)
+
+    if math.hypot(stick2_bot.x-stick1.box.pos.x,stick2_bot.z-stick1.box.pos.z)< small:
+        point=stick2_bot
+        ref_point=stick1_bot
+        ref_vec=stick1.box.axis
+        small= math.hypot(stick2_bot.x-stick1.box.pos.x,stick2_bot.z-stick1.box.pos.z)
+
+    if math.hypot(stick2_top.x-stick1.box.pos.x,stick2_top.z-stick1.box.pos.z)< small:
+        point=stick2_top
+        ref_point=stick1_bot
+        ref_vec=stick1.box.axis
+        small=math.hypot(stick2_top.x-stick1.box.pos.x,stick2_top.z-stick1.box.pos.z)
+
+     # This loop divides the reference vector into 100 sub-vectors gradually increasing in length from the              #reference point
+     # The distance between the variable point and every single point found after adding the sub-vectors to        #the reference point is calculated
+     # The smallest distance found is kept in the variable small
+
+    while div <=1:
+        a=ref_vec*div
+        point2=ref_point+a
+        length=math.hypot(point.x-point2.x, point.z-point2.z)
+
+        if length<small:
+            small=length
+
+        div=div+0.01
+    return small # Returns the smallest distance between the variable point and the axis of the other stick
+
+
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     spacingx = WIDTH/(Tokens_per_wallx+1)
     spacingz = LENGTH/(Tokens_per_wallz+1)
@@ -183,8 +233,8 @@ time.sleep(1)
 populate_walls(5,5)
 R = Robot(0,17,0)
 
-#for x in xrange(41,50):
- #   marker_list.append(Token(x))
+for x in xrange(41,60):
+   marker_list.append(Token(x))
 
 def velocity_checker():
     
@@ -200,11 +250,23 @@ def velocity_checker():
         moment0 = float(R.motors[0].speed)
         moment1 = float(-R.motors[1].speed)
         totalmoment = (moment0 + moment1)/RATE
+
+
         #Check for collisions with walls
         newpos = R.box.pos+velocity
         if newpos.x > (-WIDTH/2) + 30 and newpos.x < WIDTH/2 -30 and newpos.z  < LENGTH/2 -30 and newpos.z > -LENGTH/2+30:
             R.box.pos += velocity
             R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
+        else:
+            velocity = (0,0,0)
+        for markers in marker_list:
+            if shortest_distance(markers, R, 0.01) < (markers.box.height/2+R.box.height/2):
+                newmarkerpos = markers.box.pos + velocity
+                if newmarkerpos.x > (-WIDTH/2) + 5 and newmarkerpos.x < WIDTH/2 -5 and newmarkerpos.z  < LENGTH/2 -5 and newmarkerpos.z > -LENGTH/2+5:
+                    markers.box.pos += velocity
+                    for things in markers.markers:
+                        things.box.pos += velocity
+        
             
 
 
