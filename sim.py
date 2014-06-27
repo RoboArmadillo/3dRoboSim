@@ -24,7 +24,7 @@ player_position = vector(1,2,3)
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-RATE = 24
+RATE = 100
 
 #creates arena
 arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
@@ -132,6 +132,15 @@ class Robot(object):
         self.heading = vector(0,0,1)
 
 
+    def see(self):
+        for m in marker_list:
+            a = m.axis
+            b = R.box.axis
+            if diff_angle(a,b)<pi/2:
+                del (m)
+        return marker_list
+
+
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     spacingx = WIDTH/(Tokens_per_wallx+1)
     spacingz = LENGTH/(Tokens_per_wallz+1)
@@ -143,25 +152,29 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     while counter <=Tokens_per_wallx:
         xposnew = xpos + (counter * spacingx)
         if counter > 0:
-            box = Marker(2,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
+            box = Marker(counter,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=Tokens_per_wallx+Tokens_per_wallz:
         zposnew = zpos - ((counter-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx:
-            box = Marker(2,xpos+2,ypos,zposnew,(1,0,0),"token arena")
+            box = Marker(counter,xpos+2,ypos,zposnew,(1,0,0),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=((Tokens_per_wallx*2)+Tokens_per_wallz):
         xposnew = xpos + ((counter-Tokens_per_wallx-Tokens_per_wallz) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz:
-            box = Marker(2,xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
+            box = Marker(counter,xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=(Tokens_per_wallx+Tokens_per_wallz)*2:
         zposnew = zpos - ((counter-Tokens_per_wallx-Tokens_per_wallz-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz+Tokens_per_wallx:
-            box = Marker(2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
+            box = Marker(counter,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
+            marker_list.append(box)
         counter +=1
 
     
@@ -170,64 +183,28 @@ time.sleep(1)
 populate_walls(5,5)
 R = Robot(0,17,0)
 
-for x in xrange(41,50):
-    marker_list.append(Token(x))
+#for x in xrange(41,50):
+ #   marker_list.append(Token(x))
 
 def velocity_checker():
     
     oldspeed1 = 1.0
     oldspeed2 = 1.0
     while True:
-        global R
-        if oldspeed1 != R.motors[0].speed or oldspeed2 != R.motors[1].speed:
-            oldspeed1 = R.motors[0].speed
-            oldspeed2 = R.motors[1].speed
-
-
-
-            pivot = vector(R.box.axis.z,0,-R.box.axis.x)
-            pivot = norm(pivot)
-            averagespeed = (abs(R.motors[0].speed) + abs(R.motors[1].speed))/2
-            speeddiff = (R.motors[0].speed - R.motors[1].speed)/100
-
-
-
-            if speeddiff == 0:
-                speeddiff += 0.000000001
-            if (R.motors[0].speed < 0.1 and R.motors[0].speed > -0.1):
-                speeddiff = 1
-            elif (R.motors[1].speed < 0.1 and R.motors[1].speed > -0.1):
-                speeddiff = -1
-
-
-            pivot = pivot * R.box.size.z/2 / speeddiff
-            radius = mag(pivot)
-
-
-            if (R.motors[0].speed > 0 and R.motors[1].speed < 0) or (R.motors[0].speed < 0 and R.motors[1].speed > 0):
-                pivot = R.box.pos #needs to be variable
-                radius = R.box.size.z
-
-
-            if R.motors[1].speed>R.motors[0].speed:
-                radius = radius*-1
-
-            if R.motors[0].speed < 0 and R.motors[1].speed < 0:
-                averagespeed = -averagespeed
-
-            print averagespeed
-
-
-            angularvelocity = averagespeed/radius
-        if R.box.pos.x > -WIDTH/2 and R.box.pos.x < WIDTH/2 and R.box.pos.z < LENGTH/2 and R.box.pos.z > -LENGTH/2:
-            R.box.rotate(angle=angularvelocity/RATE, axis=(0,1,0), origin = pivot)
-
-                
-        else:
-            print "crashed"
-
-        time.sleep(0.02)    
-
+        #Goes a bit wonky without the prints, not sure why
+        print "looping"
+        rate(RATE)
+        #Calculates turning effect of each motor and uses them to make a turn
+        averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
+        velocity = norm(R.box.axis)*averagespeed/RATE
+        moment0 = float(R.motors[0].speed)
+        moment1 = float(-R.motors[1].speed)
+        totalmoment = (moment0 + moment1)/RATE
+        #Check for collisions with walls
+        newpos = R.box.pos+velocity
+        if newpos.x > (-WIDTH/2) + 30 and newpos.x < WIDTH/2 -30 and newpos.z  < LENGTH/2 -30 and newpos.z > -LENGTH/2+30:
+            R.box.pos += velocity
+            R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
             
 
 
@@ -239,19 +216,10 @@ counter =0
 left = R.motors[0]
 right = R.motors[1]
 while True:
-    rate(10)
-    left.speed = 100
-    right.speed = 100
-    time.sleep(2)
-    left.speed = 100
-    right.speed = 100
-    time.sleep(0.5)
+    rate(24)
 
-    '''
-    time.sleep(0.5)
-    R.motors[0].speed = 30
-    R.motors[1].speed = 30
-    time.sleep(1)
-    '''
+    left.speed = 100
+    right.speed = 70
+
     
 
