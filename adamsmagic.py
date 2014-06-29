@@ -24,7 +24,7 @@ player_position = vector(1,2,3)
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-RATE = 100
+RATE = 24 # works smoothly but only if the rate is about 24 ish, 100 seems to freeze it.
 
 #creates arena
 arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
@@ -278,10 +278,19 @@ counter =0
 left = R.motors[0]
 right = R.motors[1]
 while True:
-    rate(24)
+    rate(RATE)
 
-    left.speed = 100
-    right.speed = 70
-
+    R.motors[0].speed = 30.0
+    R.motors[1].speed = 50.0
+    time.sleep(2)  
+    R.motors[0].speed = 50.0
+    R.motors[1].speed = 10.0
+    time.sleep(2)
+    R.motors[0].speed = -50.0
+    R.motors[1].speed = 50.0
+    time.sleep(1)
+    R.motors[0].speed = -100.0
+    R.motors[1].speed = -100.0
+    time.sleep(5)
     
 
