@@ -30,7 +30,7 @@ areawall1 = box(pos=(-WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.o
 areawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
 areawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 areawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
-
+scene.forward=(0,-1,0)
 
 #the marker object creates one "Marker" that represents one paper marker that we stick on the side of a "token".
 #For the Boxes look at the "Token" Object
@@ -252,7 +252,6 @@ if __name__ == "__main__":
                     marker.box.pos += velocity
                     for things in marker.markers:
                         things.marker.pos += velocity
-
 
         
 
