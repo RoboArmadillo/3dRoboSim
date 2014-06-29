@@ -1,5 +1,4 @@
 from visual import *
-import time
 import math
 import Image
 import thread
