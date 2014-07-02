@@ -3,6 +3,7 @@ import time
 import math
 import Image
 import thread
+import time
 
 im = Image.open('libkoki.png')  
 im2 = Image.open('floor.png') 
@@ -33,7 +34,7 @@ areawall1 = box(pos=(-WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.o
 areawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
 areawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 areawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
-
+scene.forward=(0,-1,0)
 
 def backward_map(x,in1,in2,out1,out2):
     a=(in2-in1) #difference between inputs
@@ -244,7 +245,7 @@ def velocity_checker():
     while True:
         #Goes a bit wonky without the prints, not sure why
         #print "looping"
-        rate(RATE)
+        #rate(RATE)
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
         velocity = norm(R.box.axis)*averagespeed/RATE
