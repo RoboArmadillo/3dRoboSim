@@ -6,7 +6,6 @@ from objects import *
 from arena import *
 
 
-
 '''
 #################
 Usercode Function
@@ -24,6 +23,9 @@ def usercode():
         R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
+    
+
+
 
    
 
@@ -43,7 +45,7 @@ if __name__ == "__main__":
     populate_walls(5,5)
     
     global R
-    #R = Robot(0,15,0)
+    R = Robot(0,15,0)
     thread.start_new_thread(usercode,())
     while True:
         rate(RATE)
@@ -109,8 +111,5 @@ if __name__ == "__main__":
                         things.marker.pos += velocity*1.1
         R.box.pos += velocity
         R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
-        
-
-    
 
 
