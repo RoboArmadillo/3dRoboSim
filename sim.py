@@ -14,7 +14,6 @@ color.brown = (0.38,0.26,0.078)
 color.orange = (0.85,0.54,0.18)
 
 
-
 '''
 
 
@@ -25,11 +24,7 @@ markers are the markers on the outside of the "tokens" and on the walls and can 
 tokens are the brown boxes covered in "markers" and can be found in token_list 
 
 
-
-
 '''
-
-
 #width and height
 #0-400
 
@@ -100,7 +95,6 @@ class Token(object):
         self.angle = 0
         self.angle_rad = math.radians(self.angle)
         self.pos = vector(self.x,7,self.z)
-        #self.token.rotate(angle = self.angle_rad,axis=(0,1,0),origin = self.pos)
         self.code = code
 
 class Motor(object):
@@ -179,7 +173,6 @@ New version calculates moment caused by each motor
 #function contains usercode as it appears visual must run in main thread 
 def usercode():
     while True:
-
         R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
@@ -193,20 +186,13 @@ def usercode():
      
 #sim code is here
 if __name__ == "__main__":
-     #this is how it needs to look so we just add markers not markers and tokens to markers list,
-    #but this breaks collision stuff at the moment
-    
     
     for x in xrange(41,60):
         token_list.append(Token(x))
         for thing in Token(x).markers:
             marker_list.append(thing)
     populate_walls(5,5)
-    '''
-    for x in xrange(41,60):
-        marker_list.append(Token(x))
-        populate_walls(5,5)
-    '''
+    
     global R
     R = Robot(0,15,0)
     thread.start_new_thread(usercode,())
