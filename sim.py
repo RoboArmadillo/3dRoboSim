@@ -13,16 +13,34 @@ lamp = local_light(pos=(200,300,200), color=color.white)
 color.brown = (0.38,0.26,0.078)
 color.orange = (0.85,0.54,0.18)
 
+
+
+'''
+
+
+Terminology as I've completely confused myself with the collision stuff
+
+markers are the markers on the outside of the "tokens" and on the walls and can be found in marker_list
+
+tokens are the brown boxes covered in "markers" and can be found in token_list 
+
+
+
+
+'''
+
+
 #width and height
 #0-400
 
 marker_list = []
+token_list = []
 player_position = vector(1,2,3)
 
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-RATE = 50
+RATE = 24
 
 #creates arena
 arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
@@ -161,6 +179,7 @@ New version calculates moment caused by each motor
 #function contains usercode as it appears visual must run in main thread 
 def usercode():
     while True:
+
         R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
@@ -170,12 +189,24 @@ def usercode():
         R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
+
      
 #sim code is here
 if __name__ == "__main__":
+     #this is how it needs to look so we just add markers not markers and tokens to markers list,
+    #but this breaks collision stuff at the moment
+    
+    
+    for x in xrange(41,60):
+        token_list.append(Token(x))
+        for thing in Token(x).markers:
+            marker_list.append(thing)
+    populate_walls(5,5)
+    '''
     for x in xrange(41,60):
         marker_list.append(Token(x))
         populate_walls(5,5)
+    '''
     global R
     R = Robot(0,15,0)
     thread.start_new_thread(usercode,())
@@ -204,41 +235,42 @@ if __name__ == "__main__":
                     R.box.pos += (0,0,-0.2)
                 velocity=(0,0,0)
                 totalmoment=0     
-        #check for collisions with markers
-        for marker in marker_list:
-            if collisiondetection.collisiondetect(R.box,marker.box):
+        #check for collisions with 
+        for token in token_list:
+            if collisiondetection.collisiondetect(R.box,token.box):
+                print "True"
                 #check if markers are touching walls
                 for wall in walllist:
-                    if collisiondetection.collisiondetect(wall,marker.box):
+                    if collisiondetection.collisiondetect(wall,token.box):
                         if wall == walllist[0]:
                             print "wall 1"
-                            marker.box.pos += (0.1,0,0)
+                            token.box.pos += (0.1,0,0)
                             R.box.pos += (0.2,0,0)
-                            for things in marker.markers:
+                            for things in token.markers:
                                 things.marker.pos += (0.1,0,0)
                         elif wall == walllist[1]:
                             print "wall 2"
-                            marker.box.pos += (-0.1,0,0)
+                            token.box.pos += (-0.1,0,0)
                             R.box.pos += (-0.2,0,0)
-                            for things in marker.markers:
+                            for things in token.markers:
                                 things.marker.pos += (-0.1,0,0)
                         elif wall == walllist[2]:
                             print "wall 3"
-                            marker.box.pos += (0,0,0.1)
+                            token.box.pos += (0,0,0.1)
                             R.box.pos += (0,0,0.2)
-                            for things in marker.markers:
+                            for things in token.markers:
                                 things.marker.pos += (0,0,0.1)
                         elif wall == walllist[3]:
                             print "wall 4"
-                            marker.box.pos += (0,0,-0.1)
+                            token.box.pos += (0,0,-0.1)
                             R.box.pos += (0,0,-0.2)
-                            for things in marker.markers:
+                            for things in token.markers:
                                 things.marker.pos += (0,0,-0.1)
                         velocity=(0,0,0)
                         totalmoment=0  
                 if velocity != (0,0,0):
-                    marker.box.pos += velocity*1.1
-                    for things in marker.markers:
+                    token.box.pos += velocity*1.1
+                    for things in token.markers:
                         things.marker.pos += velocity*1.1
         R.box.pos += velocity
         R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
