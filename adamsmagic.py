@@ -25,7 +25,7 @@ player_position = vector(1,2,3)
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-RATE = 24 # works smoothly but only if the rate is about 24 ish, 100 seems to freeze it.
+RATE = 10 # works smoothly but only if the rate is about 24 ish, 100 seems to freeze it.
 
 #creates arena
 arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
@@ -134,12 +134,20 @@ class Robot(object):
 
 
     def see(self):
+        newlist = []
+        
+        #this code ensures that it only returns markers that are facing towards it.
         for m in marker_list:
             a = m.axis
             b = R.box.axis
-            if diff_angle(a,b)<pi/2:
-                del (m)
-        return marker_list
+            #print diff_angle(a,b)
+            if pi/2<diff_angle(a,b)<=pi: #1.57 = pi/2 but due to rounding issues i couldnt use pi/2
+                newlist.append(m)
+
+
+
+
+        return newlist
 
 
 def shortest_distance(stick1, stick2, div):
@@ -231,11 +239,12 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     
 
 time.sleep(1)
-populate_walls(5,5)
+#populate_walls(5,5)
 R = Robot(0,17,0)
 
-for x in xrange(41,60):
-   marker_list.append(Token(x))
+for x in xrange(0,20):
+    for y in Token(x).markers:
+        marker_list.append(y)
 
 def velocity_checker():
     
@@ -278,15 +287,16 @@ thread.start_new_thread(velocity_checker,())
 counter =0
 left = R.motors[0]
 right = R.motors[1]
+
 while True:
     rate(RATE)
-    R.motors[0].speed = 30.0
-    R.motors[1].speed = 50.0
-    time.sleep(2)  
-    R.motors[0].speed = 50.0
-    R.motors[1].speed = 10.0
-    time.sleep(2)
-    R.motors[0].speed = -50.0
-    R.motors[1].speed = 50.0
-    time.sleep(2)
+    markers = R.see()
+    print len(markers)
+    R.motors[0].speed = -20.0
+    R.motors[1].speed = 20.0
+    time.sleep(1)
+    R.motors[0].speed = 100.0
+    R.motors[1].speed = 100.0
+    time.sleep(1)
+
 
