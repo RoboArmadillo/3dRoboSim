@@ -3,7 +3,10 @@ import Image, time, thread, collisiondetection
 from math import *
 from objects import *
 #from usercode import usercode
-from arena import *
+
+
+
+
 
 
 '''
@@ -12,17 +15,52 @@ Usercode Function
 #################
 '''    
 
-def usercode():
+def usercode0():
     while True:
+        markers = R.see()
+        print len(markers)
         R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
-        R.motors[0].speed = 50.0
-        R.motors[1].speed = -50.0
-        time.sleep(0.5)
-        R.motors[0].speed = 50.0
+        R.motors[0].speed = -50.0
         R.motors[1].speed = 50.0
+        time.sleep(1)
+
+def usercode1():
+    while True:
+        markers = S.see()
+        print len(markers)
+        S.motors[0].speed = -50.0
+        S.motors[1].speed = -50.0
         time.sleep(2)
+        S.motors[0].speed = 50.0
+        S.motors[1].speed = -50.0
+        time.sleep(1)
+
+def usercode2():
+    while True:
+        markers = T.see()
+        print len(markers)
+        T.motors[0].speed = -50.0
+        T.motors[1].speed = -50.0
+        time.sleep(2)
+        T.motors[0].speed = 50.0
+        T.motors[1].speed = -50.0
+        time.sleep(1)
+
+def usercode3():
+    while True:
+        markers = S.see()
+        print len(markers)
+        U.motors[0].speed = -50.0
+        U.motors[1].speed = -50.0
+        time.sleep(2)
+        U.motors[0].speed = 50.0
+        U.motors[1].speed = -50.0
+        time.sleep(1)
+
+
+
     
 
 
@@ -45,71 +83,19 @@ if __name__ == "__main__":
     populate_walls(5,5)
     
     global R
-    R = Robot(0,15,0)
-    thread.start_new_thread(usercode,())
+    R = Robot(150,15,150)
+    S = Robot(-150,15,-150)
+    T = Robot(150,15,-150)
+    U = Robot(-150,15,150)
+    thread.start_new_thread(usercode0,())
+    thread.start_new_thread(usercode1,())
+    thread.start_new_thread(usercode2,())
+    thread.start_new_thread(usercode3,())
     while True:
         rate(RATE)
-        #Calculates turning effect of each motor and uses them to make a turn
-        averagespeed = (R.motors[0].speed + R.motors[1].speed)/2
-        velocity = norm(R.box.axis)*averagespeed/RATE
-        moment0 = R.motors[0].speed
-        moment1 = -R.motors[1].speed
-        totalmoment = (moment0 + moment1)/RATE
-        #Check for collisions with walls
-        for wall in walllist:
-            if collisiondetection.collisiondetect(wall,R.box):
-                if wall == walllist[0]:
-                    print "wall 1"
-                    R.box.pos += (0.2,0,0)
-                elif wall == walllist[1]:
-                    print "wall 2"
-                    R.box.pos += (-0.2,0,0)
-                elif wall == walllist[2]:
-                    print "wall 3"
-                    R.box.pos += (0,0,0.2)
-                elif wall == walllist[3]:
-                    print "wall 4"
-                    R.box.pos += (0,0,-0.2)
-                velocity=(0,0,0)
-                totalmoment=0     
-        #check for collisions with 
-        for token in token_list:
-            if collisiondetection.collisiondetect(R.box,token.box):
-                print "True"
-                #check if markers are touching walls
-                for wall in walllist:
-                    if collisiondetection.collisiondetect(wall,token.box):
-                        if wall == walllist[0]:
-                            print "wall 1"
-                            token.box.pos += (0.1,0,0)
-                            R.box.pos += (0.2,0,0)
-                            for things in token.markers:
-                                things.marker.pos += (0.1,0,0)
-                        elif wall == walllist[1]:
-                            print "wall 2"
-                            token.box.pos += (-0.1,0,0)
-                            R.box.pos += (-0.2,0,0)
-                            for things in token.markers:
-                                things.marker.pos += (-0.1,0,0)
-                        elif wall == walllist[2]:
-                            print "wall 3"
-                            token.box.pos += (0,0,0.1)
-                            R.box.pos += (0,0,0.2)
-                            for things in token.markers:
-                                things.marker.pos += (0,0,0.1)
-                        elif wall == walllist[3]:
-                            print "wall 4"
-                            token.box.pos += (0,0,-0.1)
-                            R.box.pos += (0,0,-0.2)
-                            for things in token.markers:
-                                things.marker.pos += (0,0,-0.1)
-                        velocity=(0,0,0)
-                        totalmoment=0  
-                if velocity != (0,0,0):
-                    token.box.pos += velocity*1.1
-                    for things in token.markers:
-                        things.marker.pos += velocity*1.1
-        R.box.pos += velocity
-        R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
+        R.update()
+        S.update()
+        T.update()
+        U.update()
 
 

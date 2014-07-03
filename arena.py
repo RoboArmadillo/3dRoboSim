@@ -51,3 +51,4 @@ arenawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.o
 walllist = [arenawall1,arenawall2,arenawall3,arenawall4]
 scene.forward=(0,-1,0)
 lamp = local_light(pos=(200,300,200), color=color.white)
+
