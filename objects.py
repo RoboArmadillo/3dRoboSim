@@ -125,7 +125,8 @@ class Robot(object):
         self.velocity = vector(0,0,0)
         self.pos = vector(self.x,self.y,self.z)
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
-        self.motors=[self.Motor(0),self.Motor(1),self.Motor(2)]
+        self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
+        self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
 
     def see(self):
         newlist = []
@@ -151,46 +152,37 @@ class Robot(object):
         for wall in walllist:
             if collisiondetection.collisiondetect(wall,self.box):
                 if wall == walllist[0]:
-                    print "wall 1"
                     self.box.pos += (0.2,0,0)
                 elif wall == walllist[1]:
-                    print "wall 2"
                     self.box.pos += (-0.2,0,0)
-                elif wall == walllist[2]:
-                    print "wall 3"
+                elif wall == walllist[2]:  
                     self.box.pos += (0,0,0.2)
                 elif wall == walllist[3]:
-                    print "wall 4"
                     self.box.pos += (0,0,-0.2)
                 velocity=(0,0,0)
                 totalmoment=0     
         #check for collisions with 
         for token in token_list:
             if collisiondetection.collisiondetect(self.box,token.box):
-                print "True"
                 #check if markers are touching walls
                 for wall in walllist:
                     if collisiondetection.collisiondetect(wall,token.box):
                         if wall == walllist[0]:
-                            print "wall 1"
                             token.box.pos += (0.1,0,0)
                             self.box.pos += (0.2,0,0)
                             for things in token.markers:
                                 things.marker.pos += (0.1,0,0)
                         elif wall == walllist[1]:
-                            print "wall 2"
                             token.box.pos += (-0.1,0,0)
                             self.box.pos += (-0.2,0,0)
                             for things in token.markers:
                                 things.marker.pos += (-0.1,0,0)
                         elif wall == walllist[2]:
-                            print "wall 3"
                             token.box.pos += (0,0,0.1)
                             self.box.pos += (0,0,0.2)
                             for things in token.markers:
                                 things.marker.pos += (0,0,0.1)
                         elif wall == walllist[3]:
-                            print "wall 4"
                             token.box.pos += (0,0,-0.1)
                             self.box.pos += (0,0,-0.2)
                             for things in token.markers:
@@ -225,3 +217,21 @@ class Robot(object):
         @speed.deleter
         def speed(self):
             del self._speed
+
+    class Servo(object):
+        def __init__(self, which_servo, angle = 90):
+            self._angle = angle
+            self._servo_no = which_servo
+            
+        @property
+        def angle(self):
+            return self._angle
+            
+        @angle.setter
+        def angle(self, value):
+            global angle
+            self._angle = value
+        
+        @angle.deleter
+        def angle(self):
+            del self._angle
