@@ -1,5 +1,5 @@
 from visual import *
-import Image, time, thread
+import Image, time, thread, collisiondetection
 from math import *
 
 im = Image.open('libkoki.png')  
@@ -22,14 +22,15 @@ player_position = vector(1,2,3)
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-RATE = 100
+RATE = 50
 
 #creates arena
 arenafloor = box(pos=(0,0,0), size=(4,WIDTH,LENGTH), color=color.orange, material = tex2, axis=(0,1,0))
-areawall1 = box(pos=(-WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
-areawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
-areawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
-areawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
+arenawall1 = box(pos=(-WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
+arenawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.orange)
+arenawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
+arenawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
+walllist = [arenawall1,arenawall2,arenawall3,arenawall4]
 scene.forward=(0,-1,0)
 
 #the marker object creates one "Marker" that represents one paper marker that we stick on the side of a "token".
@@ -160,71 +161,19 @@ New version calculates moment caused by each motor
 #function contains usercode as it appears visual must run in main thread 
 def usercode():
     while True:
-        R.motors[0].speed = 30.0
+        R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
         time.sleep(2)
         R.motors[0].speed = 50.0
-        R.motors[1].speed = 10.0
-        time.sleep(2)
-        R.motors[0].speed = -50.0
+        R.motors[1].speed = -50.0
+        time.sleep(0.5)
+        R.motors[0].speed = 50.0
         R.motors[1].speed = 50.0
-        time.sleep(1)
-        R.motors[0].speed = -100.0
-        R.motors[1].speed = -100.0
-        time.sleep(5)
-
-def shortest_distance(stick1, stick2, div):
-    # To find the top and bottom point of the sticks
-    stick1_top=stick1.box.pos+(stick1.box.axis)/2
-    stick1_bot=stick1.box.pos-(stick1.box.axis)/2
-    stick2_top=stick2.box.pos+(stick2.box.axis)/2
-    stick2_bot=stick2.box.pos-(stick2.box.axis)/2
-    point=stick1_top #Assuming top point of stick1 has the smallest distance from the center of stick2
-    ref_point=stick2_bot #Assigning the bottom point of stick2 as the reference point
-    ref_vec=stick2.box.axis #Assigning the asix of stick2 as the reference vector
-
-    #Assigns the distance between the top point of stick1 and center of stick2 to the variable small
-
-    small =math.hypot(stick1_top.x-stick2.box.pos.x, stick1_top.z-stick2.box.pos.z)
-
-    # The following if statements check if the distance from the selected point of one stick to the center of          #another stick is smaller than the small
-    # If it is smaller, then it changes the value of variable point and variable small
-    # It also changes the reference point to bottom point of stick1 and the reference vector to axis of stick1      #if the smallest distance is from a point in stick2
-
-    if math.hypot(stick1_bot.x-stick2.box.pos.x,stick1_bot.z-stick2.box.pos.z)< small:
-        point=stick1_bot
-        small= math.hypot(stick1_bot.x-stick2.box.pos.x,stick1_bot.z-stick2.box.pos.z)
-
-    if math.hypot(stick2_bot.x-stick1.box.pos.x,stick2_bot.z-stick1.box.pos.z)< small:
-        point=stick2_bot
-        ref_point=stick1_bot
-        ref_vec=stick1.box.axis
-        small= math.hypot(stick2_bot.x-stick1.box.pos.x,stick2_bot.z-stick1.box.pos.z)
-
-    if math.hypot(stick2_top.x-stick1.box.pos.x,stick2_top.z-stick1.box.pos.z)< small:
-        point=stick2_top
-        ref_point=stick1_bot
-        ref_vec=stick1.box.axis
-        small=math.hypot(stick2_top.x-stick1.box.pos.x,stick2_top.z-stick1.box.pos.z)
-
-     # This loop divides the reference vector into 100 sub-vectors gradually increasing in length from the              #reference point
-     # The distance between the variable point and every single point found after adding the sub-vectors to        #the reference point is calculated
-     # The smallest distance found is kept in the variable small
-
-    while div <=1:
-        a=ref_vec*div
-        point2=ref_point+a
-        length=math.hypot(point.x-point2.x, point.z-point2.z)
-
-        if length<small:
-            small=length
-
-        div=div+0.01
-    return small # Returns the smallest distance between the variable point and the axis of the other stick
+        time.sleep(2)
      
 #sim code is here
 if __name__ == "__main__":
-    for x in xrange(41,50):
+    for x in xrange(41,60):
         marker_list.append(Token(x))
         populate_walls(5,5)
     global R
@@ -239,20 +188,60 @@ if __name__ == "__main__":
         moment1 = -R.motors[1].speed
         totalmoment = (moment0 + moment1)/RATE
         #Check for collisions with walls
-        newpos = R.box.pos+velocity
-        if newpos.x > (-WIDTH/2) + 30 and newpos.x < WIDTH/2 -30 and newpos.z  < LENGTH/2 -30 and newpos.z > -LENGTH/2+30:
-            R.box.pos += velocity
-            R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
-        else:
-            velocity = (0,0,0)
+        for wall in walllist:
+            if collisiondetection.collisiondetect(wall,R.box):
+                if wall == walllist[0]:
+                    print "wall 1"
+                    R.box.pos += (0.2,0,0)
+                elif wall == walllist[1]:
+                    print "wall 2"
+                    R.box.pos += (-0.2,0,0)
+                elif wall == walllist[2]:
+                    print "wall 3"
+                    R.box.pos += (0,0,0.2)
+                elif wall == walllist[3]:
+                    print "wall 4"
+                    R.box.pos += (0,0,-0.2)
+                velocity=(0,0,0)
+                totalmoment=0     
+        #check for collisions with markers
         for marker in marker_list:
-            if shortest_distance(marker, R, 0.01) < (marker.box.height/2+R.box.height/2):
-                newmarkerpos = marker.box.pos + velocity
-                if newmarkerpos.x > (-WIDTH/2) + 5 and newmarkerpos.x < WIDTH/2 -5 and newmarkerpos.z  < LENGTH/2 -5 and newmarkerpos.z > -LENGTH/2+5:
-                    marker.box.pos += velocity
+            if collisiondetection.collisiondetect(R.box,marker.box):
+                #check if markers are touching walls
+                for wall in walllist:
+                    if collisiondetection.collisiondetect(wall,marker.box):
+                        if wall == walllist[0]:
+                            print "wall 1"
+                            marker.box.pos += (0.1,0,0)
+                            R.box.pos += (0.2,0,0)
+                            for things in marker.markers:
+                                things.marker.pos += (0.1,0,0)
+                        elif wall == walllist[1]:
+                            print "wall 2"
+                            marker.box.pos += (-0.1,0,0)
+                            R.box.pos += (-0.2,0,0)
+                            for things in marker.markers:
+                                things.marker.pos += (-0.1,0,0)
+                        elif wall == walllist[2]:
+                            print "wall 3"
+                            marker.box.pos += (0,0,0.1)
+                            R.box.pos += (0,0,0.2)
+                            for things in marker.markers:
+                                things.marker.pos += (0,0,0.1)
+                        elif wall == walllist[3]:
+                            print "wall 4"
+                            marker.box.pos += (0,0,-0.1)
+                            R.box.pos += (0,0,-0.2)
+                            for things in marker.markers:
+                                things.marker.pos += (0,0,-0.1)
+                        velocity=(0,0,0)
+                        totalmoment=0  
+                if velocity != (0,0,0):
+                    marker.box.pos += velocity*1.1
                     for things in marker.markers:
-                        things.marker.pos += velocity
-
+                        things.marker.pos += velocity*1.1
+        R.box.pos += velocity
+        R.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = R.box.pos)
         
 
     
