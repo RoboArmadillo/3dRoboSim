@@ -18,7 +18,14 @@ Usercode Function
 if SWARM_MODE == False:
     def usercode0():
         while True:
-            continue
+            R.motors[0].speed = 50
+            R.motors[1].speed = 50
+            time.sleep(5)
+            R.motors[0].speed = -50
+            R.motors[1].speed = 50
+            time.sleep(0.5)
+
+
 '''
     def usercode1():
         while True:
@@ -78,12 +85,12 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-    for x in xrange(41,61):
+    for x in xrange(41,91):
         token_list.append(Token(x))
         print len(token_list)
         for thing in token_list[x-41].markers:
             marker_list.append(thing)
-    populate_walls(5,5)
+    populate_walls(7,7)
     
     if SWARM_MODE == False:
         R = Robot(0,15,0)

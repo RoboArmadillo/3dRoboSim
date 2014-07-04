@@ -54,6 +54,16 @@ arenawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.o
 arenawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 arenawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 walllist = [arenawall1,arenawall2,arenawall3,arenawall4]
+
+#floor decorations
+
+area1 = box(pos=(0,2,LENGTH/2-50), size=(WIDTH,0.01,4), color=color.white)
+area2 = box(pos=(WIDTH/2-50,2,0), size=(4,0.01,LENGTH), color=color.white)
+area3 = box(pos=((-WIDTH/2 +50),2,0), size=(4,0.01,LENGTH), color=color.white)
+area4 = box(pos=(0,2,(-LENGTH/2 +50)), size=(WIDTH,0.01,4), color=color.white)
+
+
+
 scene.forward=(0,-1,0)
 lamp = local_light(pos=(200,300,200), color=color.white)
 
@@ -94,8 +104,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = random.randint((-WIDTH/2)+11,WIDTH/2-11)
-        self.z = random.randint((-LENGTH/2)+11,LENGTH/2-11)
+        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -127,12 +137,14 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
+        '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
                         self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
                         self.Covering(self.x,30,self.z-15,(0,0,-1),"leftside"),
                         self.Covering(self.x,17,self.z+15,(0,0,1),"rightside"),
                         self.Covering(self.x,2,self.z,(0,-1,0),"top"),
                         self.Covering(self.x,32,self.z,(0,1,0),"top")]
+        '''
 
     def see(self):
         newlist = []
