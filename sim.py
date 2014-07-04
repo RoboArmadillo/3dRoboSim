@@ -18,14 +18,7 @@ Usercode Function
 if SWARM_MODE == False:
     def usercode0():
         while True:
-            markers = R.see()
-            print len(markers)
-            R.motors[0].speed = -40
-            R.motors[1].speed = -100
-            time.sleep(2)
-            R.motors[0].speed = -50
-            R.motors[1].speed = 50
-            time.sleep(0.5)
+            continue
 '''
     def usercode1():
         while True:

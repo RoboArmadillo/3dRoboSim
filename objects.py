@@ -127,10 +127,10 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
-        self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"end"),
-                        self.Covering(self.x+25,17,self.z,(1,0,0),"end"),
-                        self.Covering(self.x,17,self.z-15,(0,0,-1),"side"),
-                        self.Covering(self.x,17,self.z+15,(0,0,1),"side"),
+        self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
+                        self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
+                        self.Covering(self.x,30,self.z-15,(0,0,-1),"leftside"),
+                        self.Covering(self.x,17,self.z+15,(0,0,1),"rightside"),
                         self.Covering(self.x,2,self.z,(0,-1,0),"top"),
                         self.Covering(self.x,32,self.z,(0,1,0),"top")]
 
@@ -264,11 +264,12 @@ class Robot(object):
             self.axis = vector(int(axis_decider[0]),int(axis_decider[1]),int(axis_decider[2]))
 
             self.marker_type = marker_type
-            if self.marker_type == "end":
+            if self.marker_type == "back":
                 self.sizey = 30
                 self.sizez = 30
                 self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex3,axis = self.axis)
-            elif self.marker_type == "side":
+
+            elif self.marker_type == "leftside":
                 self.sizey = 30
                 self.sizez = 50
                 self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex4,axis = self.axis)
@@ -277,4 +278,14 @@ class Robot(object):
                 self.sizey = 50
                 self.sizez = 30
                 self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex5,axis = self.axis)
+
+            elif self.marker_type == "front":
+                self.sizey = 30
+                self.sizez = 30
+                self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex6,axis = self.axis)
+
+            elif self.marker_type == "rightside":
+                self.sizey = 30
+                self.sizez = 50
+                self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex7,axis = self.axis)
 
