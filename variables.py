@@ -9,7 +9,7 @@ walllist = []
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-SWARM_MODE = True
-SWARM_NUMBER = 10
+SWARM_MODE = False
+SWARM_NUMBER = 18
 
 
