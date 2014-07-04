@@ -20,8 +20,8 @@ if SWARM_MODE == False:
         while True:
             markers = R.see()
             print len(markers)
-            R.motors[0].speed = -30.0
-            R.motors[1].speed = -100.0
+            R.motors[0].speed = -70
+            R.motors[1].speed = -100
             time.sleep(2)
             R.motors[0].speed = -50.0
             R.motors[1].speed = 50.0

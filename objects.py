@@ -143,10 +143,10 @@ class Robot(object):
 
     def update(self):
         #Calculates turning effect of each motor and uses them to make a turn
-        averagespeed = (self.motors[0].speed + self.motors[1].speed)/2
+        averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         velocity = norm(self.box.axis)*averagespeed/RATE
-        moment0 = self.motors[0].speed
-        moment1 = -self.motors[1].speed
+        moment0 = float(self.motors[0].speed)
+        moment1 = float(-self.motors[1].speed)
         totalmoment = (moment0 + moment1)/RATE
         #Check for collisions with walls
         for wall in walllist:
