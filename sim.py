@@ -20,13 +20,13 @@ if SWARM_MODE == False:
         while True:
             markers = R.see()
             print len(markers)
-            R.motors[0].speed = 50.0
-            R.motors[1].speed = 50.0
+            R.motors[0].speed = -30.0
+            R.motors[1].speed = -100.0
             time.sleep(2)
             R.motors[0].speed = -50.0
             R.motors[1].speed = 50.0
             time.sleep(0.5)
-
+'''
     def usercode1():
         while True:
             markers = S.see()
@@ -59,6 +59,7 @@ if SWARM_MODE == False:
             U.motors[0].speed = 50.0
             U.motors[1].speed = -50.0
             time.sleep(0.5)
+'''
 
 if SWARM_MODE == True:
     def usercode(number):
@@ -84,28 +85,28 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-    
-    for x in xrange(41,60):
+    for x in xrange(41,61):
         token_list.append(Token(x))
-        for thing in Token(x).markers:
+        print len(token_list)
+        for thing in token_list[x-41].markers:
             marker_list.append(thing)
     populate_walls(5,5)
     
     if SWARM_MODE == False:
-        R = Robot(150,15,150)
-        S = Robot(-150,15,-150)
-        T = Robot(150,15,-150)
-        U = Robot(-150,15,150)
+        R = Robot(0,15,0)
+        #S = Robot(-150,15,-150)
+        #T = Robot(150,15,-150)
+        #U = Robot(-150,15,150)
         thread.start_new_thread(usercode0,())
-        thread.start_new_thread(usercode1,())
-        thread.start_new_thread(usercode2,())
-        thread.start_new_thread(usercode3,())
+        #thread.start_new_thread(usercode1,())
+        #thread.start_new_thread(usercode2,())
+        #thread.start_new_thread(usercode3,())
         while True:
             rate(RATE)
             R.update()
-            S.update()
-            T.update()
-            U.update()
+            #S.update()
+            #T.update()
+            #U.update()
     if SWARM_MODE == True:
         for x in xrange(SWARM_NUMBER):
             robot_list.append(Robot(random.randint(-150,150),15,random.randint(-150,150)))
