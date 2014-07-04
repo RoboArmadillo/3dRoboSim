@@ -84,10 +84,10 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-    
-    for x in xrange(41,60):
+    for x in xrange(41,61):
         token_list.append(Token(x))
-        for thing in Token(x).markers:
+        print len(token_list)
+        for thing in token_list[x-41].markers:
             marker_list.append(thing)
     populate_walls(5,5)
     

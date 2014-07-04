@@ -1,6 +1,6 @@
 from visual import *
 
-RATE = 24
+RATE = 50
 marker_list = []
 token_list = []
 robot_list = []
@@ -9,7 +9,7 @@ walllist = []
 LENGTH = 400
 WIDTH = 400
 HEIGHT = 50
-SWARM_MODE = True
+SWARM_MODE = False
 SWARM_NUMBER = 10
 
 

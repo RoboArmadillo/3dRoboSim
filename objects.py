@@ -161,7 +161,7 @@ class Robot(object):
                     self.box.pos += (0,0,-0.2)
                 velocity=(0,0,0)
                 totalmoment=0     
-        #check for collisions with 
+        #check for collisions with tokens
         for token in token_list:
             if collisiondetection.collisiondetect(self.box,token.box):
                 #check if markers are touching walls
