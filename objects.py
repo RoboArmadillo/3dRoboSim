@@ -127,6 +127,12 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
+        self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"end"),
+                        self.Covering(self.x+25,17,self.z,(1,0,0),"end"),
+                        self.Covering(self.x,17,self.z-15,(0,0,-1),"side"),
+                        self.Covering(self.x,17,self.z+15,(0,0,1),"side"),
+                        self.Covering(self.x,2,self.z,(0,-1,0),"top"),
+                        self.Covering(self.x,32,self.z,(0,1,0),"top")]
 
     def see(self):
         newlist = []
@@ -196,6 +202,10 @@ class Robot(object):
         self.box.pos += velocity
         self.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
 
+        #this section needs to be fixed to allow the cover to stick to the robot even while turning
+        #for m in self.coverings:
+            #m.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
+
 
 
 
@@ -235,3 +245,28 @@ class Robot(object):
         @angle.deleter
         def angle(self):
             del self._angle
+
+    class Covering(object):
+        def __init__(self,x,y,z,axis_decider,marker_type):
+            self.x = x
+            self.y = y
+            self.z = z
+            self.pos = vector(self.x,self.y,self.z)
+
+            self.axis = vector(int(axis_decider[0]),int(axis_decider[1]),int(axis_decider[2]))
+
+            self.marker_type = marker_type
+            if self.marker_type == "end":
+                self.sizey = 30
+                self.sizez = 30
+                self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex3,axis = self.axis)
+            elif self.marker_type == "side":
+                self.sizey = 30
+                self.sizez = 50
+                self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex4,axis = self.axis)
+
+            elif self.marker_type == "top":
+                self.sizey = 50
+                self.sizez = 30
+                self.box = box(pos=self.pos, size=(0.01,self.sizey,self.sizez), color=color.white,material=tex5,axis = self.axis)
+
