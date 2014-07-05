@@ -4,6 +4,7 @@ import random
 from variables import *
 from Texturesandcolours import *
 import collisiondetection
+import collections
 
 
 
@@ -104,8 +105,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = -390#random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = 0#random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -137,6 +138,7 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
+        self.Markertuple = collections.namedtuple('Markertuple', 'distance')
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
                         self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
@@ -148,16 +150,20 @@ class Robot(object):
 
     def see(self):
         newlist = []
+        personal_marker_list = []
         
         for m in marker_list:
             a = m.axis
             b = self.box.axis
             if m.axis.y == 0:
-                if diff_angle(a,b) >1.57 and diff_angle(a,b)<=pi:
+                if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
                     newlist.append(m)
-                    #print diff_angle(a,b)
-                
-        return newlist
+        for n in newlist:
+            marker = self.Markertuple(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y)))
+            personal_marker_list.append(marker)
+
+        return personal_marker_list
+
 
     def update(self):
         #Calculates turning effect of each motor and uses them to make a turn
@@ -213,10 +219,10 @@ class Robot(object):
                         things.marker.pos += velocity*1.5
                 if totalmoment != 0:
                     token.box.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
-                    token.box.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+                    token.box.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)
                     for things in token.markers:
                         things.marker.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
-                        things.marker.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+                        things.marker.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)
                         
                         
         self.box.pos += velocity

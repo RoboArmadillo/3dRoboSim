@@ -21,11 +21,11 @@ im7 = Image.open('rightside.png')
 #converts images to usable textures
 tex = materials.texture(data=im, mapping='sign')
 tex2 = materials.texture(data=im2, mapping='sign')
-tex3 = materials.texture(data=im3, mapping='sign')
-tex4 = materials.texture(data=im4, mapping='sign')
-tex5 = materials.texture(data=im5, mapping='sign')
-tex6 = materials.texture(data=im6, mapping='sign')
-tex7 = materials.texture(data=im7, mapping='sign')
+tex3 = materials.texture(data=im3, mapping='rectangular')
+tex4 = materials.texture(data=im4, mapping='rectangular')
+tex5 = materials.texture(data=im5, mapping='rectangular')
+tex6 = materials.texture(data=im6, mapping='rectangular')
+tex7 = materials.texture(data=im7, mapping='rectangular')
 
 #defines any useful colours we need, RGB scale between 0-1, user colour_mapper function to convert from 0-255 to 0-1
 color.brown = (0.38,0.26,0.078)
