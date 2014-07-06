@@ -89,7 +89,7 @@ if __name__ == "__main__":
     #populate_walls(5,5)
     
     if SWARM_MODE == False:
-        R = Robot(0,15,0)
+        R = Robot(0,15,90)
         #S = Robot(-150,15,-150)
         #T = Robot(150,15,-150)
         #U = Robot(-150,15,150)

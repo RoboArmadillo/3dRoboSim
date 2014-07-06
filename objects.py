@@ -157,13 +157,17 @@ class Robot(object):
         personal_marker_list = []
         
         for m in marker_list:
-            a = m.axis
+            a = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             b = self.box.axis
-            if m.axis.y == 0:
-                if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
+            print a
+            print math.degrees(diff_angle(a,b))
+            print m.axis.y
+            if m.axis.y == 0.0:
+                if math.degrees(diff_angle(a,b)) > 270 or math.degrees(diff_angle(a,b))<=90:
                     newlist.append(m)
+                    print "appended"
         for n in newlist:
-            a = math.degrees(diff_angle(self.box.axis,-n.marker.axis))
+            a = math.degrees(diff_angle(self.box.axis,-n.axis))
             print a
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,a,2))
