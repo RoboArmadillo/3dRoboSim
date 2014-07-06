@@ -241,7 +241,6 @@ class Robot(object):
                 if self.velocity != (0,0,0):
                     token.box.pos += self.velocity*1.5
                     for things in token.markers:
-<<<<<<< HEAD
                         things.marker.pos += self.velocity*1.5
                 if self.totalmoment != 0:
                     token.box.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
@@ -249,17 +248,13 @@ class Robot(object):
                     for things in token.markers:
                         things.marker.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
                         things.marker.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
-=======
                         things.marker.pos += velocity*1.5
                 if totalmoment != 0:
                     token.box.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
                     token.box.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)
                     for things in token.markers:
                         things.marker.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
-                        things.marker.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)
->>>>>>> 0df1f7074828d070ca8bddec130a5888ac78c37a
-                        
-                        
+                        things.marker.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)                        
         self.box.pos += self.velocity
         self.box.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
 
