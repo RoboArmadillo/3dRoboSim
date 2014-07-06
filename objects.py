@@ -161,7 +161,7 @@ class Robot(object):
             a = m.axis
             b = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             if m.axis.y == 0:
-                if diff_angle(a,b) > pi/2 and diff_angle(a,b)<=pi:
+                if diff_angle(a,b) > 1.6 and diff_angle(a,b)<=pi:
                     newlist.append(m)
 
 
