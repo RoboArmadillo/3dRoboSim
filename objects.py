@@ -159,9 +159,9 @@ class Robot(object):
 
         for m in marker_list:
             a = m.axis
-            b = self.box.axis
+            b = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             if m.axis.y == 0:
-                if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
+                if diff_angle(a,b) > pi/2 and diff_angle(a,b)<=pi: # this i think is broken - yes you were right
                     newlist.append(m)
 
 
@@ -169,7 +169,7 @@ class Robot(object):
 
 
         for n in newlist:
-            a = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
+            a = self.box.pos-vector(n.pos.x,self.box.pos.y,n.pos.z)
             b = self.box.axis
             c = math.degrees(diff_angle(a,b))
 
@@ -177,7 +177,11 @@ class Robot(object):
 
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2))
-            #field of view stuff
+            
+
+
+            #field of view stuff - this works
+
             if int(marker.rotation.y) <30:
                 personal_marker_list.append(marker)
 
