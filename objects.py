@@ -165,9 +165,6 @@ class Robot(object):
             a = m.axis
             b = self.box.axis
             if m.axis.y == 0:
-                if (self.angle_diff(a.x,a.z,b.x,b.z) <= 1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
-                    print self.angle_diff(a.x,a.z,b.x,b.z)
-                    print true
                 if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
                     newlist.append(m)
 
