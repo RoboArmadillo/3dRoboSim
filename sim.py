@@ -18,12 +18,12 @@ Usercode Function
 if SWARM_MODE == False:
     def usercode0():
         while True:
-            R.motors[0].speed = 0
-            R.motors[1].speed = 0
-            markers = R.see()
-        
-            #for m in markers:
-                #print m.rotation.y
+            R.motors[0].speed = 50
+            R.motors[1].speed = 50
+            time.sleep(2)
+            R.motors[0].speed = -50
+            R.motors[1].speed = 50
+            time.sleep(0.5)
 
 
 '''
@@ -86,7 +86,7 @@ Movement update and collision
 
 if __name__ == "__main__":
 
-    for x in xrange(41,46):
+    for x in xrange(41,70):
         token_list.append(Token(x))
         print len(token_list)
         for thing in token_list[x-41].markers:
