@@ -138,6 +138,7 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
+        self.totalmoment=0
         self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type')
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
@@ -166,13 +167,57 @@ class Robot(object):
         return personal_marker_list
 
 
+    def wall_token_collision(self,token):
+            for wall in walllist:
+                if collisiondetection.collisiondetect(wall,token.box):
+                    if wall == walllist[0]:
+                        token.box.pos += (0.1,0,0)
+                        self.box.pos += (0.2,0,0)
+                        for things in token.markers:
+                            things.marker.pos += (0.1,0,0)
+                    elif wall == walllist[1]:
+                        token.box.pos += (-0.1,0,0)
+                        self.box.pos += (-0.2,0,0)
+                        for things in token.markers:
+                            things.marker.pos += (-0.1,0,0)
+                        token.box.pos += (0,0,0.1)
+                        self.box.pos += (0,0,0.2)
+                        for things in token.markers:
+                            things.marker.pos += (0,0,0.1)
+                    elif wall == walllist[3]:
+                        token.box.pos += (0,0,-0.1)
+                        self.box.pos += (0,0,-0.2)
+                        for things in token.markers:
+                            things.marker.pos += (0,0,-0.1)
+                    self.velocity=(0,0,0)
+                    self.totalmoment=0  
+
+    def token_token_collision(self,token):
+        temp_token_list = token_list[:]
+        temp_token_list.remove(token)
+        for othertoken in temp_token_list:
+            if self.velocity != (0,0,0):
+                if collisiondetection.collisiondetect(token.box,othertoken.box):
+                    self.wall_token_collision(othertoken)
+                    if self.velocity!=(0,0,0):
+                        othertoken.box.pos += self.velocity*1.5
+                        for things in othertoken.markers:
+                            things.marker.pos += self.velocity*1.5
+                if self.totalmoment != 0:
+                    othertoken.box.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
+                    othertoken.box.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+                    for things in othertoken.markers:
+                        things.marker.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
+                        things.marker.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+                    self.wall_token_collision(othertoken)
+    
     def update(self):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
-        velocity = norm(self.box.axis)*averagespeed/RATE
+        self.velocity = norm(self.box.axis)*averagespeed/RATE
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
-        totalmoment = (moment0 + moment1)/RATE
+        self.totalmoment = (moment0 + moment1)/RATE
         #Check for collisions with walls
         for wall in walllist:
             if collisiondetection.collisiondetect(wall,self.box):
@@ -184,39 +229,27 @@ class Robot(object):
                     self.box.pos += (0,0,0.2)
                 elif wall == walllist[3]:
                     self.box.pos += (0,0,-0.2)
-                velocity=(0,0,0)
-                totalmoment=0     
+                self.velocity=(0,0,0)
+                self.totalmoment=0     
         #check for collisions with tokens
         for token in token_list:
             if collisiondetection.collisiondetect(self.box,token.box):
-                #check if markers are touching walls
-                for wall in walllist:
-                    if collisiondetection.collisiondetect(wall,token.box):
-                        if wall == walllist[0]:
-                            token.box.pos += (0.1,0,0)
-                            self.box.pos += (0.2,0,0)
-                            for things in token.markers:
-                                things.marker.pos += (0.1,0,0)
-                        elif wall == walllist[1]:
-                            token.box.pos += (-0.1,0,0)
-                            self.box.pos += (-0.2,0,0)
-                            for things in token.markers:
-                                things.marker.pos += (-0.1,0,0)
-                        elif wall == walllist[2]:
-                            token.box.pos += (0,0,0.1)
-                            self.box.pos += (0,0,0.2)
-                            for things in token.markers:
-                                things.marker.pos += (0,0,0.1)
-                        elif wall == walllist[3]:
-                            token.box.pos += (0,0,-0.1)
-                            self.box.pos += (0,0,-0.2)
-                            for things in token.markers:
-                                things.marker.pos += (0,0,-0.1)
-                        velocity=(0,0,0)
-                        totalmoment=0  
-                if velocity != (0,0,0):
-                    token.box.pos += velocity*1.5
+                #check if tokens are touching walls
+                self.wall_token_collision(token) 
+                #check if tokens are touching other tokens
+                self.token_token_collision(token)
+                if self.velocity != (0,0,0):
+                    token.box.pos += self.velocity*1.5
                     for things in token.markers:
+<<<<<<< HEAD
+                        things.marker.pos += self.velocity*1.5
+                if self.totalmoment != 0:
+                    token.box.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
+                    token.box.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+                    for things in token.markers:
+                        things.marker.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
+                        things.marker.pos -= 0.03*vector(self.box.axis.z,0,-self.box.axis.x)
+=======
                         things.marker.pos += velocity*1.5
                 if totalmoment != 0:
                     token.box.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
@@ -224,16 +257,17 @@ class Robot(object):
                     for things in token.markers:
                         things.marker.rotate(angle=(totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
                         things.marker.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)
+>>>>>>> 0df1f7074828d070ca8bddec130a5888ac78c37a
                         
                         
-        self.box.pos += velocity
-        self.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
+        self.box.pos += self.velocity
+        self.box.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
 
         #this section needs to be fixed to allow the cover to stick to the robot even while turning
         #for m in self.coverings:
-            #m.box.rotate(angle=totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
-
-
+            #m.box.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
+        
+        
 
 
 
