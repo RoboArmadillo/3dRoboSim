@@ -107,8 +107,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = -190#random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = 0#random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -163,7 +163,7 @@ class Robot(object):
                 if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
                     newlist.append(m)
         for n in newlist:
-            a = diff_angle(self.box.axis,n.marker.axis)
+            a = math.degrees(diff_angle(self.box.axis,-n.marker.axis))
             print a
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,a,2))

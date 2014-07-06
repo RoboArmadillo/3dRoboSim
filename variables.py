@@ -1,6 +1,6 @@
 from visual import *
 
-RATE = 24
+RATE = 2
 marker_list = []
 token_list = []
 robot_list = []
