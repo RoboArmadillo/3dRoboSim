@@ -20,24 +20,28 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
         xposnew = xpos + (counter * spacingx)
         if counter > 0:
             box = Marker(2,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=Tokens_per_wallx+Tokens_per_wallz:
         zposnew = zpos - ((counter-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx:
             box = Marker(2,xpos+2,ypos,zposnew,(1,0,0),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=((Tokens_per_wallx*2)+Tokens_per_wallz):
         xposnew = xpos + ((counter-Tokens_per_wallx-Tokens_per_wallz) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz:
             box = Marker(2,xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
+            marker_list.append(box)
         counter +=1
 
     while counter <=(Tokens_per_wallx+Tokens_per_wallz)*2:
         zposnew = zpos - ((counter-Tokens_per_wallx-Tokens_per_wallz-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz+Tokens_per_wallx:
             box = Marker(2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
+            marker_list.append(box)
         counter +=1
 
 
@@ -75,7 +79,6 @@ lamp = local_light(pos=(200,300,200), color=color.white)
 
 class Marker(object):
     def __init__(self,code,x,y,z,axis_decider,marker_type):
-        global player_position
         self.x = x
         self.y = y
         self.z = z
@@ -94,7 +97,6 @@ class Marker(object):
 
         self.angle = 0
         self.angle_rad = math.radians(self.angle)
-        self.distance = math.sqrt((self.pos.x -player_position.x)**2 + (self.pos.y -player_position.y)**2 + (self.pos.z -player_position.z)**2)
         self.code = code
 
 
@@ -105,8 +107,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = -190#random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = 190#random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -138,7 +140,9 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
-        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type')
+
+        self.Rotationtuple = collections.namedtuple('Rotationtuple', 'x y z')
+        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type rotation')
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
                         self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
@@ -159,8 +163,10 @@ class Robot(object):
                 if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
                     newlist.append(m)
         for n in newlist:
+            a = diff_angle(self.box.axis,n.marker.axis)
+            print a
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-            marker = self.Markertuple(distance,n.code,n.marker_type)
+            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,a,2))
             personal_marker_list.append(marker)
 
         return personal_marker_list
