@@ -152,24 +152,16 @@ class Robot(object):
                         self.Covering(self.x,32,self.z,(0,1,0),"top")]
         '''
 
-    def angle_diff(self,v1x,v1z,v2x,v2z):
-        angle=atan2(v2z,v2x)-atan2(v1z,v1x)
-        return angle
-        
     def see(self):
         newlist = []
         personal_marker_list = []
-#angle of 2 relative to 1= atan2(v2.y,v2.x) - atan2(v1.y,v1.x)
+
 
         for m in marker_list:
             a = m.axis
             b = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             if m.axis.y == 0:
-<<<<<<< HEAD
-                if diff_angle(a,b) > pi/2 and diff_angle(a,b)<=pi: # this i think is broken - yes you were right
-=======
-                if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
->>>>>>> 8321dc5168859c58fdefd6190c39446247960ead
+                if diff_angle(a,b) > pi/2 and diff_angle(a,b)<=pi:
                     newlist.append(m)
 
 
@@ -179,14 +171,10 @@ class Robot(object):
         for n in newlist:
             a = self.box.pos-vector(n.pos.x,self.box.pos.y,n.pos.z)
             b = self.box.axis
-<<<<<<< HEAD
             c = math.degrees(diff_angle(a,b))
 
 
 
-=======
-            a = math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
->>>>>>> 8321dc5168859c58fdefd6190c39446247960ead
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2))
             
