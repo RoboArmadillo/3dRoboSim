@@ -155,13 +155,17 @@ class Robot(object):
     def see(self):
         newlist = []
         personal_marker_list = []
-        
+
+
         for m in marker_list:
             a = m.axis
             b = self.box.axis
             if m.axis.y == 0:
                 if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
                     newlist.append(m)
+
+
+
 
 
         for n in newlist:
