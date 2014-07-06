@@ -22,7 +22,7 @@ if SWARM_MODE == False:
             R.motors[1].speed = 50
             markers = R.see()
             for m in markers:
-                print m.distance
+                print m.marker_type
 
 
 '''
@@ -84,7 +84,7 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-    for x in xrange(41,42):
+    for x in xrange(41,46):
         token_list.append(Token(x))
         print len(token_list)
         for thing in token_list[x-41].markers:

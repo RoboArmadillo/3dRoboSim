@@ -105,8 +105,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = -390#random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = 0#random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -138,7 +138,7 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
-        self.Markertuple = collections.namedtuple('Markertuple', 'distance')
+        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type')
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
                         self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
@@ -159,7 +159,8 @@ class Robot(object):
                 if diff_angle(a,b) >1.60 and diff_angle(a,b)<=pi:
                     newlist.append(m)
         for n in newlist:
-            marker = self.Markertuple(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y)))
+            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
+            marker = self.Markertuple(distance,n.code,n.marker_type)
             personal_marker_list.append(marker)
 
         return personal_marker_list
