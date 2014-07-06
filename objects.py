@@ -171,10 +171,15 @@ class Robot(object):
         for n in newlist:
             a = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             b = self.box.axis
-            a = math.degrees(diff_angle(a,b))
+            c = math.degrees(diff_angle(a,b))
+
+
+
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,a,2))
-            personal_marker_list.append(marker)
+            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2))
+            #field of view stuff
+            if int(marker.rotation.y) <30:
+                personal_marker_list.append(marker)
 
         return personal_marker_list
 
