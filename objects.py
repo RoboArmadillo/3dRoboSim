@@ -107,8 +107,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = -190#random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = 0#random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = 0#random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = 190#random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -140,9 +140,9 @@ class Robot(object):
         self.box = box(pos=self.pos, size=(50,30,30), color=color.blue, axis=(1,0,0))
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
-        self.Rotationtuple = collections.namedtuple('Rotationtuple', 'x y z')
+        self.Bearingtuple = collections.namedtuple('Bearingtuple', 'x y z')
         self.Worldtuple = collections.namedtuple('Worldtuple', 'x y z')
-        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type rotation world')
+        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type bearing world')
         self.totalmoment=0
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
@@ -180,13 +180,14 @@ class Robot(object):
 
 
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
+            marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
+
             
 
 
             #field of view stuff - this works
 
-            if int(marker.rotation.y) <30 and int(marker.rotation.y) >-30:
+            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30:
                 personal_marker_list.append(marker)
 
         return personal_marker_list

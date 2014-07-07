@@ -20,7 +20,7 @@ if SWARM_MODE == False:
         while True:
             markers = R.see()
             if len(markers)>0:
-                angle = markers[0].rotation.y
+                angle = markers[0].bearing.y
                 print angle
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
