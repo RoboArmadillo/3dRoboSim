@@ -5,6 +5,12 @@ from Texturesandcolours import *
 from objects import *
 
 
+'''
+############
+PLEASE NOTE, THIS FILE IS NOT USED.
+############
+'''
+
 def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     spacingx = WIDTH/(Tokens_per_wallx+1)
     spacingz = LENGTH/(Tokens_per_wallz+1)

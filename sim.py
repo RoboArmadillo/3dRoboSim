@@ -20,11 +20,12 @@ if SWARM_MODE == False:
         while True:
             markers = R.see()
             for m in markers:
-                print m.distance
-            '''
+                if m.marker_type != "token marker":
+                    markers.remove(m)
+            print len(markers)
+            
             if len(markers)>0:
                 angle = markers[0].bearing.y
-                print angle
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
                     R.motors[1].speed = 10
@@ -38,7 +39,8 @@ if SWARM_MODE == False:
                 R.motors[0].speed = -10
                 R.motors[1].speed = 10
             time.sleep(0.2)
-            '''
+            
+            
 
 '''
     def usercode1():
@@ -95,16 +97,17 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-
-    for x in xrange(41,42):
+    '''
+    for x in xrange(41,51):
         token_list.append(Token(x))
         print len(token_list)
         for thing in token_list[x-41].markers:
             marker_list.append(thing)
-    #populate_walls(5,5)
+    '''
+    populate_walls(5,5)
     
     if SWARM_MODE == False:
-        R = Robot(0,15,30)
+        R = Robot(0,15,0)
         #S = Robot(-150,15,-150)
         #T = Robot(150,15,-150)
         #U = Robot(-150,15,150)

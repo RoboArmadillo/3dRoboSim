@@ -19,28 +19,28 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     while counter <=Tokens_per_wallx:
         xposnew = xpos + (counter * spacingx)
         if counter > 0:
-            box = Marker(2,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
+            box = Marker(Tokens_per_wallx,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
             marker_list.append(box)
         counter +=1
 
     while counter <=Tokens_per_wallx+Tokens_per_wallz:
         zposnew = zpos - ((counter-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx:
-            box = Marker(2,xpos+2,ypos,zposnew,(1,0,0),"token arena")
+            box = Marker(Tokens_per_wallx+Tokens_per_wallz,xpos+2,ypos,zposnew,(1,0,0),"token arena")
             marker_list.append(box)
         counter +=1
 
     while counter <=((Tokens_per_wallx*2)+Tokens_per_wallz):
         xposnew = xpos + ((counter-Tokens_per_wallx-Tokens_per_wallz) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz:
-            box = Marker(2,xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
+            box = Marker(((Tokens_per_wallx*2)+Tokens_per_wallz),xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
             marker_list.append(box)
         counter +=1
 
     while counter <=(Tokens_per_wallx+Tokens_per_wallz)*2:
         zposnew = zpos - ((counter-Tokens_per_wallx-Tokens_per_wallz-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz+Tokens_per_wallx:
-            box = Marker(2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
+            box = Marker((Tokens_per_wallx+Tokens_per_wallz)*2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
             marker_list.append(box)
         counter +=1
 
@@ -107,8 +107,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = 0#random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = 190#random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
@@ -160,15 +160,14 @@ class Robot(object):
         newlist = []
         personal_marker_list = []
 
-
         #checks faces are visible
         for m in marker_list:
             a = m.axis
             b = vector(m.pos.x,self.box.pos.y,m.pos.z)-self.box.pos
-            if m.axis.y == 0:
-                if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
+            if m.axis.y == 0.0:
+                if diff_angle(a,b) > 1.6 and diff_angle(a,b)<=pi: #something was wrong with your version of my code.  #if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
                     newlist.append(m)
-
+        #print newlist
 
 
 
@@ -180,14 +179,14 @@ class Robot(object):
 
 
 
-            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y)),2)
+            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
 
             
 
 
             #field of view stuff - this works
-            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30: #and marker.distance>0.2: #if the robot gets too close it looses sight of the marker
+            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.5: #if the robot gets too close it looses sight of the markers
                 personal_marker_list.append(marker)
 
         return personal_marker_list
@@ -241,9 +240,9 @@ class Robot(object):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         self.velocity = norm(self.box.axis)*averagespeed/RATE
-        print norm(self.box.axis)*averagespeed/RATE
-        print averagespeed/RATE
-        print norm(self.box.axis)
+        #print norm(self.box.axis)*averagespeed/RATE
+        #print averagespeed/RATE
+        #print norm(self.box.axis)
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
         self.totalmoment = (moment0 + moment1)/RATE
