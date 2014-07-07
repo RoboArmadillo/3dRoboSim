@@ -180,14 +180,14 @@ class Robot(object):
 
 
 
-            distance = round(mag(a),2)
+            distance = round(mag(a)/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
-
+            print marker.distance
             
 
 
             #field of view stuff - this works
-            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30: #and marker.distance>0.2: #if the robot gets too close it looses sight of the marker
+            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.3+self.box.length/200: #if the robot gets too close it looses sight of the marker
                 personal_marker_list.append(marker)
 
         return personal_marker_list

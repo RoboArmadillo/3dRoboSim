@@ -19,14 +19,10 @@ if SWARM_MODE == False:
     def usercode0():
         while True:
             markers = R.see()
-            for m in markers:
-                print m.distance
-            R.motors[0].speed = 20
-            R.motors[1].speed = -20
-            '''
+                      
             if len(markers)>0:
+                print markers[0].distance
                 angle = markers[0].bearing.y
-                print angle
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
                     R.motors[1].speed = 10
@@ -40,9 +36,9 @@ if SWARM_MODE == False:
                 R.motors[0].speed = -10
                 R.motors[1].speed = 10
             time.sleep(0.2)
-            '''
+            
 
-'''
+
     def usercode1():
         while True:
             markers = S.see()
@@ -75,7 +71,7 @@ if SWARM_MODE == False:
             U.motors[0].speed = 50.0
             U.motors[1].speed = -50.0
             time.sleep(0.5)
-'''
+
 
 if SWARM_MODE == True:
     def usercode(number):
