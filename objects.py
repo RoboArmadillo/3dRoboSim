@@ -161,6 +161,7 @@ class Robot(object):
         personal_marker_list = []
 
 
+        #checks faces are visible
         for m in marker_list:
             a = m.axis
             b = vector(m.pos.x,self.box.pos.y,m.pos.z)-self.box.pos
@@ -171,7 +172,7 @@ class Robot(object):
 
 
 
-
+        #calculates angle to box
         for n in newlist:
             a = vector(n.pos.x,self.box.pos.y,n.pos.z)-self.box.pos
             b = self.box.axis
@@ -179,15 +180,14 @@ class Robot(object):
 
 
 
-            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
+            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y)),2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
 
             
 
 
             #field of view stuff - this works
-
-            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30:
+            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30: #and marker.distance>0.2: #if the robot gets too close it looses sight of the marker
                 personal_marker_list.append(marker)
 
         return personal_marker_list
