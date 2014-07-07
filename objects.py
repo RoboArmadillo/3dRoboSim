@@ -137,7 +137,7 @@ class Robot(object):
         self.z = z
         self.velocity = vector(0,0,0)
         self.pos = vector(self.x,self.y,self.z)
-        self.box = box(pos=self.pos, size=(50,30,30), color=color.blue)
+        self.box = box(pos=self.pos, size=(50,30,30), color=color.blue, axis=(1,0,0))
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
         self.Bearingtuple = collections.namedtuple('Bearingtuple', 'x y z')
@@ -163,7 +163,7 @@ class Robot(object):
 
         for m in marker_list:
             a = m.axis
-            b = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
+            b = vector(m.pos.x,self.box.pos.y,m.pos.z)-self.box.pos
             if m.axis.y == 0:
                 if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
                     newlist.append(m)
@@ -173,14 +173,15 @@ class Robot(object):
 
 
         for n in newlist:
-            a = self.box.pos-vector(n.pos.x,n.pos.y,n.pos.z)
+            a = vector(n.pos.x,self.box.pos.y,n.pos.z)-self.box.pos
             b = self.box.axis
             c = -math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
 
 
 
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-            marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,a.y,a.x))
+            marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
+
             
 
 
@@ -240,6 +241,9 @@ class Robot(object):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         self.velocity = norm(self.box.axis)*averagespeed/RATE
+        print norm(self.box.axis)*averagespeed/RATE
+        print averagespeed/RATE
+        print norm(self.box.axis)
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
         self.totalmoment = (moment0 + moment1)/RATE
