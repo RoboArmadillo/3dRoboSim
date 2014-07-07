@@ -107,8 +107,8 @@ class Marker(object):
 class Token(object):
     def __init__(self,code):
         global player_position
-        self.x = -190#random.randint((-WIDTH/2)+60,WIDTH/2-60)
-        self.z = 0#random.randint((-LENGTH/2)+60,LENGTH/2-60)
+        self.x = 0#random.randint((-WIDTH/2)+60,WIDTH/2-60)
+        self.z = 190#random.randint((-LENGTH/2)+60,LENGTH/2-60)
         self.pos = vector(self.x,7,self.z)
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
