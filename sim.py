@@ -18,13 +18,23 @@ Usercode Function
 if SWARM_MODE == False:
     def usercode0():
         while True:
-            R.motors[0].speed = -0
-            R.motors[1].speed = 0
             markers = R.see()
-            for m in markers:
-                print m.world
-
-
+            if len(markers)>0:
+                angle = markers[0].rotation.y
+                print angle
+                if angle >10 and angle <30:
+                    R.motors[0].speed = -10
+                    R.motors[1].speed = 10
+                elif angle < -10 and angle > -30:
+                    R.motors[0].speed = 20
+                    R.motors[1].speed = -20
+                elif angle <10 and angle >-10:
+                    R.motors[0].speed = 30
+                    R.motors[1].speed = 30
+            else:
+                R.motors[0].speed = -10
+                R.motors[1].speed = 10
+            time.sleep(0.2)
 
 '''
     def usercode1():
