@@ -173,7 +173,7 @@ class Robot(object):
 
 
         for n in newlist:
-            a = self.box.pos-vector(n.pos.x,self.box.pos.y,n.pos.z)
+            a = self.box.pos-vector(n.pos.x,n.pos.y,n.pos.z)
             b = self.box.axis
             c = -math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
 
