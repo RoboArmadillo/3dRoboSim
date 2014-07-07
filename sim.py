@@ -22,11 +22,31 @@ if SWARM_MODE == False:
             print len(markers)
             R.motors[0].speed = 50
             R.motors[1].speed = -50
-            R.motors[0].speed = -0
-            R.motors[1].speed = 0
             markers = R.see()
-            for m in markers:
-                print m.world
+            if len(markers) != 0:
+                #on the right
+                if markers[0].bearing.y > 15:
+                    R.motors[0].speed = 50
+                    R.motors[1].speed = -50
+                    time.sleep(0.2)
+                #on the left
+                elif markers[0].bearing.y < -15:
+                    R.motors[0].speed = -50
+                    R.motors[1].speed = 50
+                    time.sleep(0.2)
+
+                else:
+                    R.motors[0].speed = -50
+                    R.motors[1].speed = -50
+                    time.sleep(0.5)
+            else:
+                R.motors[0].speed = -50
+                R.motors[1].speed = 50
+                time.sleep(0.2)
+
+
+
+
 
 
 
