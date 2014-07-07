@@ -21,6 +21,8 @@ if SWARM_MODE == False:
             markers = R.see()
             for m in markers:
                 print m.distance
+            R.motors[0].speed = 20
+            R.motors[1].speed = -20
             '''
             if len(markers)>0:
                 angle = markers[0].bearing.y

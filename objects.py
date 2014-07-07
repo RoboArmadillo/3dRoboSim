@@ -174,13 +174,13 @@ class Robot(object):
 
         #calculates angle to box
         for n in newlist:
-            a = vector(n.pos.x,self.box.pos.y,n.pos.z)-self.box.pos
+            a = vector(n.pos.x,n.pos.y,n.pos.z)-self.box.pos
             b = self.box.axis
             c = -math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
 
 
 
-            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y)),2)
+            distance = round(mag(a),2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
 
             
@@ -241,9 +241,6 @@ class Robot(object):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         self.velocity = norm(self.box.axis)*averagespeed/RATE
-        print norm(self.box.axis)*averagespeed/RATE
-        print averagespeed/RATE
-        print norm(self.box.axis)
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
         self.totalmoment = (moment0 + moment1)/RATE
