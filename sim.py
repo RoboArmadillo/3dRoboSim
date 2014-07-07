@@ -20,28 +20,28 @@ if SWARM_MODE == False:
         while True:
             markers = R.see()
             print len(markers)
-            R.motors[0].speed = 50
-            R.motors[1].speed = -50
+            R.motors[0].speed = 20
+            R.motors[1].speed = -20
             markers = R.see()
             if len(markers) != 0:
                 #on the right
-                if markers[0].bearing.y > 15:
-                    R.motors[0].speed = 50
-                    R.motors[1].speed = -50
+                if markers[0].bearing.y > 5:
+                    R.motors[0].speed = -20
+                    R.motors[1].speed = 20
                     time.sleep(0.2)
                 #on the left
-                elif markers[0].bearing.y < -15:
-                    R.motors[0].speed = -50
-                    R.motors[1].speed = 50
+                elif markers[0].bearing.y < -5:
+                    R.motors[0].speed = 20
+                    R.motors[1].speed = -20
                     time.sleep(0.2)
 
                 else:
-                    R.motors[0].speed = -50
-                    R.motors[1].speed = -50
+                    R.motors[0].speed = -20
+                    R.motors[1].speed = -20
                     time.sleep(0.5)
             else:
-                R.motors[0].speed = -50
-                R.motors[1].speed = 50
+                R.motors[0].speed = -20
+                R.motors[1].speed = 20
                 time.sleep(0.2)
 
 
