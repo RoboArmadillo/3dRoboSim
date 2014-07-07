@@ -141,7 +141,8 @@ class Robot(object):
         self.motors = [self.Motor(0),self.Motor(1),self.Motor(2)]
         self.servos = [self.Servo(0),self.Servo(1),self.Servo(2)]
         self.Rotationtuple = collections.namedtuple('Rotationtuple', 'x y z')
-        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type rotation')
+        self.Worldtuple = collections.namedtuple('Worldtuple', 'x y z')
+        self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type rotation world')
         self.totalmoment=0
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
@@ -151,7 +152,10 @@ class Robot(object):
                         self.Covering(self.x,2,self.z,(0,-1,0),"top"),
                         self.Covering(self.x,32,self.z,(0,1,0),"top")]
         '''
-
+    def angle_diff(self,v1x,v1z,v2x,v2z):
+        angle=atan2(v2z,v2x)-atan2(v1z,v1x)
+        return angle
+        
     def see(self):
         newlist = []
         personal_marker_list = []
@@ -161,7 +165,7 @@ class Robot(object):
             a = m.axis
             b = self.box.pos-vector(m.pos.x,self.box.pos.y,m.pos.z)
             if m.axis.y == 0:
-                if diff_angle(a,b) > 1.6 and diff_angle(a,b)<=pi:
+                if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
                     newlist.append(m)
 
 
@@ -171,18 +175,18 @@ class Robot(object):
         for n in newlist:
             a = self.box.pos-vector(n.pos.x,self.box.pos.y,n.pos.z)
             b = self.box.axis
-            c = math.degrees(diff_angle(a,b))
+            c = -math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
 
 
 
             distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2))
+            marker = self.Markertuple(distance,n.code,n.marker_type,self.Rotationtuple(2,c,2),self.Worldtuple(a.z,a.y,a.x))
             
 
 
             #field of view stuff - this works
 
-            if int(marker.rotation.y) <30:
+            if int(marker.rotation.y) <30 and int(marker.rotation.y) >-30:
                 personal_marker_list.append(marker)
 
         return personal_marker_list
