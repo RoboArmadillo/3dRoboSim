@@ -21,12 +21,17 @@ if SWARM_MODE == False:
         
         while True:
             markers = R.see()
+<<<<<<< HEAD
             for m in markers:
                 if m.marker_type != "token marker":
                     markers.remove(m)
 
             
+=======
+                      
+>>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
             if len(markers)>0:
+                print markers[0].distance
                 angle = markers[0].bearing.y
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
@@ -42,9 +47,12 @@ if SWARM_MODE == False:
                 R.motors[1].speed = 10
             time.sleep(0.2)
             
+<<<<<<< HEAD
             
+=======
 
-'''
+>>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
+
     def usercode1():
         while True:
             markers = S.see()
@@ -77,7 +85,7 @@ if SWARM_MODE == False:
             U.motors[0].speed = 50.0
             U.motors[1].speed = -50.0
             time.sleep(0.5)
-'''
+
 
 if SWARM_MODE == True:
     def usercode(number):
