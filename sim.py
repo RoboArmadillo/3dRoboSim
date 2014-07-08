@@ -2,8 +2,9 @@ from visual import *
 import Image, time, thread, collisiondetection
 from math import *
 from objects import *
+from variables import *
+import Tkinter as tk
 #from usercode import usercode
-
 
 
 
@@ -17,12 +18,13 @@ Usercode Function
 
 if SWARM_MODE == False:
     def usercode0():
+        
         while True:
             markers = R.see()
             for m in markers:
                 if m.marker_type != "token marker":
                     markers.remove(m)
-            print len(markers)
+
             
             if len(markers)>0:
                 angle = markers[0].bearing.y
@@ -97,14 +99,13 @@ Movement update and collision
 '''
 
 if __name__ == "__main__":
-    '''
-    for x in xrange(41,51):
+    
+    for x in xrange(41,41+NUMBER_OF_TOKENS):
         token_list.append(Token(x))
         print len(token_list)
         for thing in token_list[x-41].markers:
             marker_list.append(thing)
-    '''
-    populate_walls(5,5)
+    
     
     if SWARM_MODE == False:
         R = Robot(0,15,0)
