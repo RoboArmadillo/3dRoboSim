@@ -3,11 +3,26 @@ import Image, time, thread, collisiondetection
 from math import *
 from objects import *
 from variables import *
-import Tkinter as tk
-#from usercode import usercode
+from visual.controls import *
+
+start = False
+
+def change(): # Called by controls when button is clicked
+    global R
+    global start
+    for x in xrange(30):
+        print "boo"
+    start = True
 
 
+ 
+c = controls() # Create controls window
+# Create a button in the controls window:
+b = button( pos=(0,0), width=150, height=60,
+              text='Start Simulation', action=lambda: change() )
 
+
+start = False
 
 
 '''
@@ -18,20 +33,14 @@ Usercode Function
 
 if SWARM_MODE == False:
     def usercode0():
-        
         while True:
             markers = R.see()
-<<<<<<< HEAD
             for m in markers:
                 if m.marker_type != "token marker":
                     markers.remove(m)
 
             
-=======
-                      
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
             if len(markers)>0:
-                print markers[0].distance
                 angle = markers[0].bearing.y
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
@@ -45,13 +54,7 @@ if SWARM_MODE == False:
             else:
                 R.motors[0].speed = -10
                 R.motors[1].speed = 10
-            time.sleep(0.2)
-            
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
+                time.sleep(0.2)
 
     def usercode1():
         while True:
@@ -106,27 +109,36 @@ Movement update and collision
 #############################
 '''
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+
+for x in xrange(41,41+NUMBER_OF_TOKENS):
+    token_list.append(Token(x))
+    for thing in token_list[x-41].markers:
+        marker_list.append(thing)
     
-    for x in xrange(41,41+NUMBER_OF_TOKENS):
-        token_list.append(Token(x))
-        print len(token_list)
-        for thing in token_list[x-41].markers:
-            marker_list.append(thing)
     
-    
-    if SWARM_MODE == False:
-        R = Robot(0,15,0)
+if SWARM_MODE == False:
+    R = Robot(0,15,0)
         #S = Robot(-150,15,-150)
         #T = Robot(150,15,-150)
         #U = Robot(-150,15,150)
-        thread.start_new_thread(usercode0,())
+    thread.start_new_thread(usercode0,())
+    #thread.start_new_thread(control_window,())
         #thread.start_new_thread(usercode1,())
         #thread.start_new_thread(usercode2,())
         #thread.start_new_thread(usercode3,())
+
+    while start == False:
+        rate(RATE)
+        c.interact()
+
+
+    if start == True:
         while True:
             rate(RATE)
             R.update()
+            c.interact()
+    '''
             #S.update()
             #T.update()
             #U.update()
@@ -142,6 +154,7 @@ if __name__ == "__main__":
 
         while True:
             rate(RATE)
+            c.interact()
             for r in robot_list:
                 r.update()
-
+    '''

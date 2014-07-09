@@ -17,16 +17,8 @@ launch.pack()
 launch.place(bordermode=OUTSIDE, height=100, width=100,relx = 0.2, rely=0.6)
 
 
-def SimOptionsCallBack():
-   tkMessageBox.showinfo( "Simulation Options", "This will launch options for sim")
-
-SimOptions = Tkinter.Button(top, text ="Run Simulation", command = SimOptionsCallBack, bg="#d9892e",fg= "#231f20",
-                activebackground = "#ffffff",relief = FLAT, bd =2)
-SimOptions.config(highlightthickness=0)
-SimOptions.pack()
-SimOptions.place(bordermode=OUTSIDE, height=100, width=100,relx = 0.8, rely=0.6)
-
-
+w = Label(top, text="Hello, world!", anchor = CENTER)
+w.pack()
 
 
 

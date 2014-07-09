@@ -112,22 +112,15 @@ class Robot(object):
 
 
 
-<<<<<<< HEAD
-            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-=======
+
             distance = round(mag(a)/100,2)
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
-            print marker.distance
+            print ""
             
 
 
             #field of view stuff - this works
-<<<<<<< HEAD
-            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.5: #if the robot gets too close it looses sight of the markers
-=======
             if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.3+self.box.length/200: #if the robot gets too close it looses sight of the marker
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
                 personal_marker_list.append(marker)
 
         return personal_marker_list
@@ -181,12 +174,6 @@ class Robot(object):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         self.velocity = norm(self.box.axis)*averagespeed/RATE
-<<<<<<< HEAD
-        #print norm(self.box.axis)*averagespeed/RATE
-        #print averagespeed/RATE
-        #print norm(self.box.axis)
-=======
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
         self.totalmoment = (moment0 + moment1)/RATE
