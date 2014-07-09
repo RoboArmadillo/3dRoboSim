@@ -18,40 +18,66 @@ Usercode Function
 
 if SWARM_MODE == False:
     def usercode0():
-        
+        seen=False
+        grabbed = False
         while True:
+            templist = []
             markers = R.see()
-<<<<<<< HEAD
             for m in markers:
-                if m.marker_type != "token marker":
-                    markers.remove(m)
-
-            
-=======
-                      
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
-            if len(markers)>0:
-                print markers[0].distance
+                print m.marker_type
+                if m.marker_type != "token arena":
+                    templist.append(m)
+                    print templist
+            markers = templist[:]
+            markers = sorted(markers, key=lambda marker: marker.distance)
+            print len(markers)
+            if grabbed:
+                R.motors[0].speed = -10
+                R.motors[1].speed = 10
+                time.sleep(4)
+                R.motors[0].speed = 70
+                R.motors[1].speed = 70
+                time.sleep(2)
+                R.motors[0].speed = 0
+                R.motors[1].speed = 0
+                R.claw.openclaw(R.box.axis)
+                time.sleep(1)
+                R.motors[0].speed = -10
+                R.motors[1].speed = -10
+                time.sleep(3)
+                R.motors[0].speed = 10
+                R.motors[1].speed = -10
+                time.sleep(3)
+                grabbed = False
+            elif len(markers)>0:
+                
                 angle = markers[0].bearing.y
                 if angle >10 and angle <30:
                     R.motors[0].speed = -10
                     R.motors[1].speed = 10
+                    time.sleep(0.2)
                 elif angle < -10 and angle > -30:
                     R.motors[0].speed = 20
                     R.motors[1].speed = -20
+                    time.sleep(0.2)
                 elif angle <10 and angle >-10:
                     R.motors[0].speed = 30
                     R.motors[1].speed = 30
+                    time.sleep(m.distance/3)
+                    seen = True
+            elif seen:
+                R.motors[0].speed = 50
+                R.motors[1].speed = 50
+                time.sleep(1)
+                R.motors[0].speed = 0
+                R.motors[1].speed = 0
+                R.claw.closeclaw(R.box.axis)
+                seen=False
+                grabbed = True
             else:
                 R.motors[0].speed = -10
                 R.motors[1].speed = 10
-            time.sleep(0.2)
             
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
 
     def usercode1():
         while True:

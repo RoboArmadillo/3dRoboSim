@@ -5,6 +5,7 @@ from variables import *
 from Texturesandcolours import *
 import collisiondetection
 import collections
+import time
 
 
 
@@ -60,7 +61,24 @@ class Token(object):
         self.pos = vector(self.x,7,self.z)
         self.code = code
 
-
+class Claw:
+    def __init__(self, startpos):
+        self.basepiece = box(pos=startpos+vector(35,0,0), size = (2,6,32), color = color.red)
+        self.rightarm = box(pos=startpos+vector(25,0,16), size = (20,6,2), color = color.red)
+        self.leftarm = box(pos=startpos+vector(25,0,-16), size = (20,6,2), color = color.red)
+        self.rightclaw = box(pos=startpos+vector(42,0,10), size = (12,10,2), color = color.red, axis = (1,0,0.5))
+        self.leftclaw = box(pos=startpos+vector(42,0,-10), size = (12,10,2), color = color.red, axis = (1,0,-0.5))
+        
+    def closeclaw(self,R):
+        while round(diff_angle(self.leftclaw.axis, R),1) != 0:
+            self.leftclaw.rotate(angle = radians(-1), axis = (0,1,0), origin = self.leftclaw.pos - norm(self.leftclaw.axis)*3)
+            self.rightclaw.rotate(angle = radians(1), axis = (0,1,0), origin = self.rightclaw.pos - norm(self.rightclaw.axis)*3)
+            time.sleep(0.1)
+    def openclaw(self,R):
+        while round(diff_angle(self.leftclaw.axis, R),1) < 0.8:
+            self.leftclaw.rotate(angle = radians(1), axis = (0,1,0), origin = self.leftclaw.pos - norm(self.leftclaw.axis)*3)
+            self.rightclaw.rotate(angle = radians(-1), axis = (0,1,0), origin = self.rightclaw.pos - norm(self.rightclaw.axis)*3)
+            time.sleep(0.1)
 
 
 class Robot(object):
@@ -77,6 +95,8 @@ class Robot(object):
         self.Worldtuple = collections.namedtuple('Worldtuple', 'x y z')
         self.Markertuple = collections.namedtuple('Markertuple', 'distance code marker_type bearing world')
         self.totalmoment=0
+        self.claw = Claw(self.pos)
+        self.clawparts = [self.claw.basepiece, self.claw.leftarm, self.claw.rightarm, self.claw.leftclaw, self.claw.rightclaw]
         '''
         self.coverings = [self.Covering(self.x-25,17,self.z,(-1,0,0),"front"),
                         self.Covering(self.x+25,17,self.z,(1,0,0),"back"),
@@ -96,7 +116,7 @@ class Robot(object):
         #checks faces are visible
         for m in marker_list:
             a = m.axis
-            b = vector(m.pos.x,self.box.pos.y,m.pos.z)-self.box.pos
+            b = self.box.axis
             if m.axis.y == 0.0:
                 if diff_angle(a,b) > 1.6 and diff_angle(a,b)<=pi: #something was wrong with your version of my code.  #if (self.angle_diff(a.x,a.z,b.x,b.z)<=1.6) and (self.angle_diff(a.x,a.z,b.x,b.z) >= -1.6):
                     newlist.append(m)
@@ -109,25 +129,15 @@ class Robot(object):
             a = vector(n.pos.x,n.pos.y,n.pos.z)-self.box.pos
             b = self.box.axis
             c = -math.degrees(self.angle_diff(a.x,a.z,b.x,b.z))
-
-
-
-<<<<<<< HEAD
-            distance = round(math.hypot((self.box.pos.x-n.marker.pos.x),(self.box.pos.y-n.marker.pos.y))/100,2)
-=======
             distance = round(mag(a)/100,2)
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
             print marker.distance
             
 
 
             #field of view stuff - this works
-<<<<<<< HEAD
-            if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.5: #if the robot gets too close it looses sight of the markers
-=======
             if int(marker.bearing.y) <30 and int(marker.bearing.y) >-30 and marker.distance>0.3+self.box.length/200: #if the robot gets too close it looses sight of the marker
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
+
                 personal_marker_list.append(marker)
 
         return personal_marker_list
@@ -181,17 +191,31 @@ class Robot(object):
         #Calculates turning effect of each motor and uses them to make a turn
         averagespeed = float((self.motors[0].speed + self.motors[1].speed))/2
         self.velocity = norm(self.box.axis)*averagespeed/RATE
-<<<<<<< HEAD
-        #print norm(self.box.axis)*averagespeed/RATE
-        #print averagespeed/RATE
-        #print norm(self.box.axis)
-=======
->>>>>>> 8fc564a4b44ac7273e7bb64ff9d5ee68beac5f58
         moment0 = float(self.motors[0].speed)
         moment1 = float(-self.motors[1].speed)
         self.totalmoment = (moment0 + moment1)/RATE
         #Check for collisions with walls
         for wall in walllist:
+            for part in self.clawparts:
+                if collisiondetection.collisiondetect(wall, part):
+                    if wall == walllist[0]:
+                        self.box.pos += (0.2,0,0)
+                        for part in self.clawparts:
+                            part.pos += (0.2,0,0)
+                    elif wall == walllist[1]:
+                        self.box.pos += (-0.2,0,0)
+                        for part in self.clawparts:
+                            part.pos += (-0.2,0,0)
+                    elif wall == walllist[2]:  
+                        self.box.pos += (0,0,0.2)
+                        for part in self.clawparts:
+                            part.pos += (0,0,0.2)
+                    elif wall == walllist[3]:
+                        self.box.pos += (0,0,-0.2)
+                        for part in self.clawparts:
+                            part.pos += (0,0,-0.2)
+                    self.velocity=(0,0,0)
+                    self.totalmoment=0  
             if collisiondetection.collisiondetect(wall,self.box):
                 if wall == walllist[0]:
                     self.box.pos += (0.2,0,0)
@@ -205,7 +229,23 @@ class Robot(object):
                 self.totalmoment=0     
         #check for collisions with tokens
         for token in token_list:
-            if collisiondetection.collisiondetect(self.box,token.box):
+            clawhit = False
+            for part in xrange(2):
+                if collisiondetection.collisiondetect(self.clawparts[part],token.box):
+                    clawhit = True
+            for part in xrange(3,4):
+                if collisiondetection.collisiondetect(self.clawparts[part],token.box):
+                    direction = norm(self.clawparts[part].axis)
+                    if part == 3:
+                        token.box.pos += (vector(-direction.z,0,direction.x))*1.5
+                        for things in token.markers:
+                            things.marker.pos += (vector(-direction.z,0,direction.x))*1.5
+                    else:
+                        token.box.pos += (vector(direction.z,0,-direction.x))*1.5
+                        for things in token.markers:
+                            things.marker.pos += (vector(direction.z,0,-direction.x))*1.5
+                            
+            if collisiondetection.collisiondetect(self.box,token.box) or clawhit:
                 #check if tokens are touching walls
                 self.wall_token_collision(token) 
                 #check if tokens are touching other tokens
@@ -228,8 +268,11 @@ class Robot(object):
                         things.marker.rotate(angle=(self.totalmoment/RATE), axis = (0,1,0), origin=self.box.pos)
                         things.marker.pos -= 0.1*vector(self.box.axis.z,0,-self.box.axis.x)                        
         self.box.pos += self.velocity
+        for part in self.clawparts:
+            part.pos += self.velocity
         self.box.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
-
+        for part in self.clawparts:
+            part.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
         #this section needs to be fixed to allow the cover to stick to the robot even while turning
         #for m in self.coverings:
             #m.box.rotate(angle=self.totalmoment/RATE, axis = (0,1,0), origin = self.box.pos)
