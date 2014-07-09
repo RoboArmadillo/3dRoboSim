@@ -14,12 +14,17 @@ def change(): # Called by controls when button is clicked
         print "boo"
     start = True
 
+def number_of_markers(obj): # called on slider drag events
+    global NUMBER_OF_TOKENS
+    NUMBER_OF_TOKENS = int(obj.value/6)
+
 
  
-c = controls() # Create controls window
+c = controls(width=500, height=500) # Create controls window
 # Create a button in the controls window:
-b = button( pos=(0,0), width=150, height=60,
+b = button( pos=(0,0), width=90, height=60,
               text='Start Simulation', action=lambda: change() )
+s2 = slider(pos=(-60,-20), width=7, length=50, axis=(0,1,0), action=lambda: number_of_markers(s2))
 
 
 start = False
@@ -111,10 +116,7 @@ Movement update and collision
 
 #if __name__ == "__main__":
 
-for x in xrange(41,41+NUMBER_OF_TOKENS):
-    token_list.append(Token(x))
-    for thing in token_list[x-41].markers:
-        marker_list.append(thing)
+
     
     
 if SWARM_MODE == False:
@@ -134,6 +136,10 @@ if SWARM_MODE == False:
 
 
     if start == True:
+        for x in xrange(41,41+NUMBER_OF_TOKENS):
+            token_list.append(Token(x))
+            for thing in token_list[x-41].markers:
+                marker_list.append(thing)
         while True:
             rate(RATE)
             R.update()

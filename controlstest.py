@@ -19,8 +19,9 @@ def cubecolor(value): # called on a menu choice
     else:
         t1.value = 1
     
-def setrate(obj): # called on slider drag events
-    cuberate(obj.value) # value is min-max slider position
+def number_of_markers(obj): # called on slider drag events
+    for x in xrange(100):
+        print obj.value # value is min-max slider position
 
 
 def cuberate(value):
