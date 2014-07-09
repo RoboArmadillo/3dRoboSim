@@ -16,15 +16,18 @@ def change(): # Called by controls when button is clicked
 
 def number_of_markers(obj): # called on slider drag events
     global NUMBER_OF_TOKENS
-    NUMBER_OF_TOKENS = int(obj.value/6)
+    NUMBER_OF_TOKENS = int(obj.value/4)
 
 
  
 c = controls(width=500, height=500) # Create controls window
+
 # Create a button in the controls window:
-b = button( pos=(0,0), width=90, height=60,
+b = button( pos=(20,0), width=90, height=60,
               text='Start Simulation', action=lambda: change() )
 s2 = slider(pos=(-60,-20), width=7, length=50, axis=(0,1,0), action=lambda: number_of_markers(s2))
+m1 = menu(pos=(-60,-34,0), height=7, width=40, text='0 markers')
+m2 = menu(pos=(-60,40,0), height=7, width=40, text='25 markers')
 
 
 start = False
@@ -136,10 +139,11 @@ if SWARM_MODE == False:
 
 
     if start == True:
-        for x in xrange(41,41+NUMBER_OF_TOKENS):
-            token_list.append(Token(x))
-            for thing in token_list[x-41].markers:
-                marker_list.append(thing)
+        if NUMBER_OF_TOKENS != 0:
+            for x in xrange(41,41+NUMBER_OF_TOKENS):
+                token_list.append(Token(x))
+                for thing in token_list[x-41].markers:
+                    marker_list.append(thing)
         while True:
             rate(RATE)
             R.update()
