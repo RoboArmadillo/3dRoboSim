@@ -349,7 +349,7 @@ arenawall2 = box(pos=(WIDTH/2,HEIGHT/2,0), size=(4,HEIGHT,LENGTH), color=color.o
 arenawall3 = box(pos=(0,HEIGHT/2,-LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 arenawall4 = box(pos=(0,HEIGHT/2,LENGTH/2), size=(WIDTH,HEIGHT,4), color=color.orange)
 walllist = [arenawall1,arenawall2,arenawall3,arenawall4]
-#populate_walls(5,5)
+populate_walls(5,5)
 
 #floor decorations
 

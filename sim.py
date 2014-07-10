@@ -26,8 +26,8 @@ c = controls(width=500, height=500) # Create controls window
 b = button( pos=(20,0), width=90, height=60,
               text='Start Simulation', action=lambda: change() )
 s2 = slider(pos=(-60,-20), width=7, length=50, axis=(0,1,0), action=lambda: number_of_markers(s2))
-m1 = menu(pos=(-60,-34,0), height=7, width=40, text='0 markers')
-m2 = menu(pos=(-60,40,0), height=7, width=40, text='25 markers')
+m1 = menu(pos=(-60,-34,0), height=7, width=40, text='0 tokens')
+m2 = menu(pos=(-60,40,0), height=7, width=40, text='25 tokens')
 
 
 start = False
@@ -124,14 +124,14 @@ Movement update and collision
     
 if SWARM_MODE == False:
     R = Robot(0,15,0)
-        #S = Robot(-150,15,-150)
-        #T = Robot(150,15,-150)
-        #U = Robot(-150,15,150)
+    S = Robot(-150,15,-150)
+    T = Robot(150,15,-150)
+    U = Robot(-150,15,150)
     thread.start_new_thread(usercode0,())
-    #thread.start_new_thread(control_window,())
-        #thread.start_new_thread(usercode1,())
-        #thread.start_new_thread(usercode2,())
-        #thread.start_new_thread(usercode3,())
+        #thread.start_new_thread(control_window,())
+    thread.start_new_thread(usercode1,())
+    thread.start_new_thread(usercode2,())
+    thread.start_new_thread(usercode3,())
 
     while start == False:
         rate(RATE)
@@ -147,6 +147,7 @@ if SWARM_MODE == False:
         while True:
             rate(RATE)
             R.update()
+            S.update()
             c.interact()
     '''
             #S.update()
