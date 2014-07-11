@@ -26,6 +26,10 @@ def togglecubecolor(): # called on toggle switch flips
     else:
         SWARM_MODE = False
 
+def number_of_robots(obj): # called on slider drag events
+    global SWARM_NUMBER
+    SWARM_NUMBER = int(obj.value)
+
 
  
 c = controls(width=500, height=500) # Create controls window
@@ -33,7 +37,12 @@ c = controls(width=500, height=500) # Create controls window
 b = button( pos=(0,50), width=90, height=60,
               text='Start Simulation', action=lambda: change() )
 
-t1 = toggle(pos=(40,-60), width=10, height=10, text0='False', text1='True', action=lambda: togglecubecolor())
+t1 = toggle(pos=(35,-25), width=10, height=10, text0='False', text1='True', action=lambda: togglecubecolor())
+s3 = slider(pos=(50,-60), width=7, length=50, axis=(0,1,0),min=1,max = 11, action=lambda: number_of_robots(s3))
+m4 = menu(pos=(50,5,-5), height=7, width=65, text='Swarm Mode Stuff')
+
+
+
 s2 = slider(pos=(-60,-60), width=7, length=50, axis=(0,1,0), action=lambda: number_of_markers(s2))
 m1 = menu(pos=(-60,-70,0), height=7, width=10, text='0')
 m2 = menu(pos=(-60,-5,0), height=7, width=10, text='25')
