@@ -20,9 +20,9 @@ class Marker(object):
         self.axis = vector(int(axis_decider[0]),int(axis_decider[1]),int(axis_decider[2]))
 
         self.marker_type = marker_type
-        if self.marker_type == "token marker":
+        if self.marker_type == "TOKEN":
             self.size = 9
-        elif self.marker_type == "token arena":
+        elif self.marker_type == "ARENA":
             self.size = 40
         self.marker = box(pos=self.pos, size=(0.01,self.size,self.size), color=color.white,material=tex,axis = self.axis)
 
@@ -46,12 +46,12 @@ class Token(object):
         self.size = 10
         self.box = self.marker = box(pos=self.pos, size=(self.size,self.size,self.size), color=color.brown)
 
-        self.markers = [Marker(code,self.x-5,7,self.z,(-1,0,0),"token marker"),
-                        Marker(code,self.x+5,7,self.z,(1,0,0),"token marker"),
-                        Marker(code,self.x,7,self.z-5,(0,0,-1),"token marker"),
-                        Marker(code,self.x,7,self.z+5,(0,0,1),"token marker"),
-                        Marker(code,self.x,2,self.z,(0,-1,0),"token marker"),
-                        Marker(code,self.x,12,self.z,(0,1,0),"token marker")]
+        self.markers = [Marker(code,self.x-5,7,self.z,(-1,0,0),"TOKEN"),
+                        Marker(code,self.x+5,7,self.z,(1,0,0),"TOKEN"),
+                        Marker(code,self.x,7,self.z-5,(0,0,-1),"TOKEN"),
+                        Marker(code,self.x,7,self.z+5,(0,0,1),"TOKEN"),
+                        Marker(code,self.x,2,self.z,(0,-1,0),"TOKEN"),
+                        Marker(code,self.x,12,self.z,(0,1,0),"TOKEN")]
 
 
 
@@ -115,7 +115,7 @@ class Robot(object):
 
             distance = round(mag(a)/100,2)
             marker = self.Markertuple(distance,n.code,n.marker_type,self.Bearingtuple(2,c,2),self.Worldtuple(a.z,n.pos.y-self.box.pos.y,a.x))
-            print ""
+            print "" #literally no idea why it needs this print, works with a tiny delay aswell! who knows why!
             
 
 
@@ -309,28 +309,28 @@ def populate_walls(Tokens_per_wallx,Tokens_per_wallz):
     while counter <=Tokens_per_wallx:
         xposnew = xpos + (counter * spacingx)
         if counter > 0:
-            box = Marker(Tokens_per_wallx,xposnew,ypos,zpos-6,(0,0,-1),"token arena")
+            box = Marker(Tokens_per_wallx,xposnew,ypos,zpos-6,(0,0,-1),"ARENA")
             marker_list.append(box)
         counter +=1
 
     while counter <=Tokens_per_wallx+Tokens_per_wallz:
         zposnew = zpos - ((counter-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx:
-            box = Marker(Tokens_per_wallx+Tokens_per_wallz,xpos+2,ypos,zposnew,(1,0,0),"token arena")
+            box = Marker(Tokens_per_wallx+Tokens_per_wallz,xpos+2,ypos,zposnew,(1,0,0),"ARENA")
             marker_list.append(box)
         counter +=1
 
     while counter <=((Tokens_per_wallx*2)+Tokens_per_wallz):
         xposnew = xpos + ((counter-Tokens_per_wallx-Tokens_per_wallz) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz:
-            box = Marker(((Tokens_per_wallx*2)+Tokens_per_wallz),xposnew+2,ypos,zpos-LENGTH,(0,0,1),"token arena")
+            box = Marker(((Tokens_per_wallx*2)+Tokens_per_wallz),xposnew+2,ypos,zpos-LENGTH,(0,0,1),"ARENA")
             marker_list.append(box)
         counter +=1
 
     while counter <=(Tokens_per_wallx+Tokens_per_wallz)*2:
         zposnew = zpos - ((counter-Tokens_per_wallx-Tokens_per_wallz-Tokens_per_wallx) * spacingz)
         if counter > Tokens_per_wallx+Tokens_per_wallz+Tokens_per_wallx:
-            box = Marker((Tokens_per_wallx+Tokens_per_wallz)*2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"token arena")
+            box = Marker((Tokens_per_wallx+Tokens_per_wallz)*2,xpos+WIDTH-2,ypos,zposnew,(-1,0,0),"ARENA")
             marker_list.append(box)
         counter +=1
 

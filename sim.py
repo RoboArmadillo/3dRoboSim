@@ -10,8 +10,6 @@ start = False
 def change(): # Called by controls when button is clicked
     global R
     global start
-    for x in xrange(30):
-        print "boo"
     start = True
 
 def number_of_markers(obj): # called on slider drag events
@@ -57,6 +55,21 @@ start = False
 Usercode Function
 #################
 '''    
+
+def SR_filter(listname,markertype):
+    temporary_list=[]
+    for l in listname:
+        if l.marker_type== markertype:
+            temporary_list.append(l)
+    listname=temporary_list
+    return listname
+
+
+def distance_orderer(listname):
+    listname=sorted(listname, key=lambda Marker:Marker.distance)
+    return listname
+
+
 def swarmcode(number):
     while True:
         robot_list[number].motors[0].speed = -50.0
@@ -72,9 +85,8 @@ def swarmcode(number):
 def usercode0():
     while True:
         markers = R.see()
-        for m in markers:
-            if m.marker_type != "token marker":
-                markers.remove(m)
+        markers = SR_filter(markers,"TOKEN")
+        markers = distance_orderer(markers)
 
             
         if len(markers)>0:
@@ -86,8 +98,8 @@ def usercode0():
                 R.motors[0].speed = 20
                 R.motors[1].speed = -20
             elif angle <10 and angle >-10:
-                R.motors[0].speed = 30
-                R.motors[1].speed = 30
+                R.motors[0].speed = 100
+                R.motors[1].speed = 100
         else:
             R.motors[0].speed = -10
             R.motors[1].speed = 10

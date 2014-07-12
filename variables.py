@@ -9,7 +9,7 @@ robot_list = []
 LENGTH = 800
 WIDTH = 800
 HEIGHT = 50
-NUMBER_OF_TOKENS = 5
+NUMBER_OF_TOKENS = 0
 
 
 
